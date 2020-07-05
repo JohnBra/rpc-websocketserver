@@ -14,8 +14,10 @@ export function validateParams(providedParams: object | Array<any>, expectedPara
             return res;
         }
         for (let i = 0; i < providedParams.length; i++) {
-            if (typeof providedParams[i] !== typeof expectedParams[expectedParamsKeys[i]]) {
-                res.errorMessage = `Param on index ${i} must be of type '${typeof expectedParamsKeys[i]}'`;
+            console.log('typeof providedParams[i]: ', typeof providedParams[i]);
+            console.log('expectedParams[expectedParamsKeys[i]]: ', expectedParams[expectedParamsKeys[i]]);
+            if (typeof providedParams[i] !== expectedParams[expectedParamsKeys[i]]) {
+                res.errorMessage = `Param on index ${i} must be of type '${expectedParams[expectedParamsKeys[i]]}'`;
                 return res;
             }
         }
@@ -31,8 +33,8 @@ export function validateParams(providedParams: object | Array<any>, expectedPara
                 res.errorMessage = `Params must include '${expectedParamsKeys[i]}'`;
                 return res;
             }
-            if (typeof providedParams[expectedParamsKeys[i]] !== typeof expectedParams[expectedParamsKeys[i]]) {
-                res.errorMessage = `Param on index ${i} must be of type '${typeof expectedParamsKeys[i]}'`;
+            if (typeof providedParams[expectedParamsKeys[i]] !== expectedParams[expectedParamsKeys[i]]) {
+                res.errorMessage = `Param on index ${i} must be of type '${expectedParams[expectedParamsKeys[i]]}'`;
                 return res;
             }
         }

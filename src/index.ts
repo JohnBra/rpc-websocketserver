@@ -2,23 +2,24 @@ import express from 'express';
 import http from 'http';
 import url from 'url';
 
-import * as WebSocket from 'ws';
 import { register, param } from './lib/decorators';
 import { WebSocketServer } from './lib/websocket-server';
+import { JSONRPC2MessageHandler } from "./lib/jsonrpc2/json-rpc-2-message-handler";
 
 const app = express();
 const server = http.createServer(app);
 
 class RPCWebsocketServer extends WebSocketServer {
     @register()
-    test(@param('m') m: string) {
-        console.log(`test: ${m}`);
+    sum(@param('a') a: string, @param('b') b: string) {
+        console.log(`adding a ${a} and b ${b}`);
+        return a + b;
     }
 
-    protected _onConnection(ws: WebSocket) {
-        console.log('reimplemented on connection handler');
-        ws.on('message', (message: string) => console.log(`received message on reimplemented ws: ${message}`));
-    }
+    // protected _onConnection(ws: WebSocket) {
+    //     console.log('reimplemented on connection handler');
+    //     ws.on('message', (message: string) => console.log(`received message on reimplemented ws: ${message}`));
+    // }
 }
 
 // class Second extends WebSocketServer {
@@ -42,6 +43,7 @@ class RPCWebsocketServer extends WebSocketServer {
 // second.callMethod("cde", ["hi", 0]);
 
 const s = new RPCWebsocketServer({ noServer: true });
+s.setMessageHandler(new JSONRPC2MessageHandler());
 
 server.on('upgrade', function upgrade(request, socket, head) {
     const { pathname } = url.parse(request.url);

@@ -19,11 +19,11 @@ export interface JSONRPC2Request {
 }
 
 export type JSONRPC2Response = {
-    jsonrpc: "2.0",
+    jsonrpc: string,    // must be exactly "2.0"
     result: any,
     id: JSONRPC2Id,
 } | {
-    jsonrpc: "2.0",
+    jsonrpc: string,    // must be exactly "2.0"
     error: JSONRPC2Error,
     id: JSONRPC2Id,
 }

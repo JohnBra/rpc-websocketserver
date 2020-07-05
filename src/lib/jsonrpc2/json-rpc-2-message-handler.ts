@@ -3,7 +3,7 @@ import { errors, JSONRPC2Request, JSONRPC2Response, JSONRPC2Error, JSONRPC2Id } 
 import { MethodValidatorResult, validateMethod } from "../method-validator";
 import { ParamValidatorResult, validateParams } from "../param-validator";
 
-class JSONRPC2MessageHandler implements MessageHandler {
+export class JSONRPC2MessageHandler implements MessageHandler {
     handle(message: any, methods: Array<Method>): HandlerResult {
         const res: HandlerResult = {
             error: true,
@@ -22,9 +22,8 @@ class JSONRPC2MessageHandler implements MessageHandler {
             res.message = 'Success';
             res.error = false;
         } catch (err) {
-            res.message = err;
+            res.message = err.message;
         }
-
         return res;
     }
 
@@ -105,11 +104,14 @@ class JSONRPC2MessageHandler implements MessageHandler {
     }
 
     static buildResponse(id: JSONRPC2Id, result: any, error: JSONRPC2Error | null): JSONRPC2Response {
-        const res = {
-            jsonrpc: "2.0", id: id
-        };
-        if (result)
-        return {jsonrpc: "2.0", result: undefined, id: undefined};
+        const res = { jsonrpc: "2.0", result: result, id: id };
+        const err = { jsonrpc: "2.0", error: error, id: id };
+        if (result) {
+            return res;
+        } else {
+            return err;
+        }
+
     }
 
     static buildError(code: number, details?: string | object): JSONRPC2Error {

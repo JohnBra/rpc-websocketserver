@@ -12,9 +12,11 @@ export function register(methodName?: string) {
         const params = {};
         if (paramNames.length === paramTypes.length) {
             for (let i = 0; i < paramNames.length; i++) {
-                if (typeof paramTypes[i].name === 'string') params[paramNames[i]] = paramTypes[i].name;
+                if (typeof paramTypes[i].name === 'string') params[paramNames[i]] = paramTypes[i].name.toLowerCase();
             }
         }
+
+        console.log(params);
 
         const method: Method = {
             namespace: target.constructor.name,

@@ -15,6 +15,7 @@ module.exports = {
         // e.g. "@typescript-eslint/explicit-function-return-type": "off",
         "@typescript-eslint/no-explicit-any": "off",
         "@typescript-eslint/ban-types": "off",
+        "@typescript-eslint/lines-between-class-members": "off",
         "no-prototype-builtins": "off",
         "no-underscore-dangle": "off",
         "no-restricted-syntax": "off",

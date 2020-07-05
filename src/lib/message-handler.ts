@@ -7,11 +7,11 @@ export interface Method {
 
 export interface HandlerResult {
     error: boolean;
-    message: string | object | number;
+    message: any;
     func: Function;
     args: Array<any>;
 }
 
 export interface MessageHandler {
-    handle(message: any, methods: Array<Method>): Promise<HandlerResult> | HandlerResult;
+    handle(message: any, methods: Array<Method>): HandlerResult;
 }
