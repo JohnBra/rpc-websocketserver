@@ -16,6 +16,6 @@ export function validateMethod(methodName: string, registeredMethods: Array<Meth
         }
     }
 
-    res.errorMessage = `Method with name '${methodName}' could not be found.`
+    res.errorMessage = `Method with name '${methodName}' could not be found.`;
     return res;
 }

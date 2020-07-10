@@ -11,7 +11,7 @@ const server = http.createServer(app);
 
 class RPCWebsocketServer extends WebSocketServer {
     @register()
-    sum(@param('a') a: string, @param('b') b: string) {
+    sum(@param('a') a: number, @param('b') b: string) {
         console.log(`adding a ${a} and b ${b}`);
         return a + b;
     }

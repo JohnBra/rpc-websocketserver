@@ -7,7 +7,7 @@ export interface Method {
 
 export interface HandlerResult {
     error: boolean;
-    message: any;
+    data: any;
     func: Function;
     args: Array<any>;
 }

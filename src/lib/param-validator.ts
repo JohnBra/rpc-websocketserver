@@ -10,12 +10,10 @@ export function validateParams(providedParams: object | Array<any>, expectedPara
 
     if (Array.isArray(providedParams)) {
         if (providedParams.length !== expectedParamsKeys.length) {
-            res.errorMessage = `Expected ${expectedParamsKeys.length} params. Got ${providedParams.length}.`
+            res.errorMessage = `Expected ${expectedParamsKeys.length} params. Got ${providedParams.length}.`;
             return res;
         }
         for (let i = 0; i < providedParams.length; i++) {
-            console.log('typeof providedParams[i]: ', typeof providedParams[i]);
-            console.log('expectedParams[expectedParamsKeys[i]]: ', expectedParams[expectedParamsKeys[i]]);
             if (typeof providedParams[i] !== expectedParams[expectedParamsKeys[i]]) {
                 res.errorMessage = `Param on index ${i} must be of type '${expectedParams[expectedParamsKeys[i]]}'`;
                 return res;
@@ -24,7 +22,7 @@ export function validateParams(providedParams: object | Array<any>, expectedPara
     } else if (typeof providedParams === 'object') {
         const providedParamsKeys = Object.keys(providedParams);
         if (providedParamsKeys.length !== expectedParamsKeys.length) {
-            res.errorMessage = `Expected ${expectedParamsKeys.length} params. Got ${providedParamsKeys.length}.`
+            res.errorMessage = `Expected ${expectedParamsKeys.length} params. Got ${providedParamsKeys.length}.`;
             return res;
         }
 
@@ -34,12 +32,13 @@ export function validateParams(providedParams: object | Array<any>, expectedPara
                 return res;
             }
             if (typeof providedParams[expectedParamsKeys[i]] !== expectedParams[expectedParamsKeys[i]]) {
-                res.errorMessage = `Param on index ${i} must be of type '${expectedParams[expectedParamsKeys[i]]}'`;
+                res.errorMessage =
+                    `Param '${expectedParamsKeys[i]}' must be of type '${expectedParams[expectedParamsKeys[i]]}'`;
                 return res;
             }
         }
     } else {
-        res.errorMessage = 'Params must be one of \'object\' or \'array\'';
+        res.errorMessage = "Params must be one of 'object' or 'array'";
         return res;
     }
 
