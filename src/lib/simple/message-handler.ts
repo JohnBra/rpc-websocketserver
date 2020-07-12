@@ -2,7 +2,7 @@ import { HandlerResult, MessageHandler, Method, Params } from '../message-handle
 import { MethodValidatorResult, validateMethod } from '../method-validator';
 import { ParamValidatorResult, validateParams } from '../param-validator';
 
-export class SimpleMessageHandler implements MessageHandler {
+class SimpleMessageHandler implements MessageHandler {
     handle(message: any, methods: Array<Method>): HandlerResult {
         const res: HandlerResult = {
             error: true,
@@ -54,3 +54,5 @@ export class SimpleMessageHandler implements MessageHandler {
         return validatorResult.methodArgs;
     }
 }
+
+export default SimpleMessageHandler;

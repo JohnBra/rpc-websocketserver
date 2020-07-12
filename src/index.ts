@@ -2,16 +2,16 @@ import express from 'express';
 import http from 'http';
 import url from 'url';
 
-import WebSocket from 'ws';
+import * as WebSocket from 'ws';
 import { register, param } from './lib/decorators';
 import { WebSocketServer } from './lib/websocket-server';
-import { JSONRPC2MessageHandler } from './lib/jsonrpc2/json-rpc-2-message-handler';
-import { SimpleMessageHandler } from './lib/simple/simple-message-handler';
+import JSONRPC2MessageHandler from './lib/jsonrpc2/message-handler';
+import SimpleMessageHandler from './lib/simple/message-handler';
 
 const app = express();
 const server = http.createServer(app);
 
-class RPCWebsocketServer extends WebSocketServer {
+class RPCNamespace extends WebSocketServer {
     constructor(options: WebSocket.ServerOptions) {
         super(options);
     }
@@ -22,7 +22,7 @@ class RPCWebsocketServer extends WebSocketServer {
     }
 }
 
-const s = new RPCWebsocketServer({ noServer: true });
+const s = new RPCNamespace({ noServer: true });
 s.setMessageHandler(new SimpleMessageHandler());
 
 server.on('upgrade', function upgrade(request, socket, head) {

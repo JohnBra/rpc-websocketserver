@@ -3,7 +3,7 @@ import { errors, JSONRPC2Request, JSONRPC2Response, JSONRPC2Error, JSONRPC2Id } 
 import { MethodValidatorResult, validateMethod } from '../method-validator';
 import { ParamValidatorResult, validateParams } from '../param-validator';
 
-export class JSONRPC2MessageHandler implements MessageHandler {
+class JSONRPC2MessageHandler implements MessageHandler {
     handle(message: any, methods: Array<Method>): HandlerResult {
         const res: HandlerResult = {
             error: true,
@@ -156,3 +156,5 @@ export class JSONRPC2MessageHandler implements MessageHandler {
         return error;
     }
 }
+
+export default JSONRPC2MessageHandler;
