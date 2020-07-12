@@ -50,7 +50,7 @@ class RPCWebsocketServer extends WebSocketServer {
 // second.callMethod("cde", ["hi", 0]);
 
 const s = new RPCWebsocketServer({ noServer: true });
-s.setMessageHandler(new SimpleMessageHandler());
+// s.setMessageHandler(new SimpleMessageHandler());
 
 server.on('upgrade', function upgrade(request, socket, head) {
     const { pathname } = url.parse(request.url);

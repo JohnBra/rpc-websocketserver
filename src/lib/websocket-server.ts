@@ -43,7 +43,6 @@ export abstract class WebSocketServer {
     }
 
     protected _onMessage(ws: WebSocket, message: string): void {
-        if (!this._messageHandler) throw Error('No message handler set.');
         const handlerResult = this._messageHandler.handle(message, this._namespaceMethods);
         const res = this._messageHandler.process(handlerResult);
         if (res) this._sendMessage(ws, res);
