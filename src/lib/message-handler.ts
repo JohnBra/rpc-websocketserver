@@ -18,4 +18,5 @@ export interface HandlerResult {
 
 export interface MessageHandler {
     handle(message: any, methods: Array<Method>): HandlerResult;
+    process(handlerResult: HandlerResult): any;
 }

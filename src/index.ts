@@ -2,6 +2,7 @@ import express from 'express';
 import http from 'http';
 import url from 'url';
 
+import WebSocket from 'ws';
 import { register, param } from './lib/decorators';
 import { WebSocketServer } from './lib/websocket-server';
 import { JSONRPC2MessageHandler } from './lib/jsonrpc2/json-rpc-2-message-handler';
@@ -10,6 +11,11 @@ const app = express();
 const server = http.createServer(app);
 
 class RPCWebsocketServer extends WebSocketServer {
+    constructor(options: WebSocket.ServerOptions) {
+        super(options);
+        console.log(this._namespaceMethods);
+    }
+
     @register()
     sum(@param('a') a: number, @param('b') b: string) {
         console.log(`adding a ${a} and b ${b}`);
@@ -57,6 +63,6 @@ server.on('upgrade', function upgrade(request, socket, head) {
     }
 });
 
-server.listen(parseInt('10001', 10), '0.0.0.0', 1024, () => {
+server.listen(10001, '0.0.0.0', 1024, () => {
     console.log(`Listening for connections on 10001...`);
 });

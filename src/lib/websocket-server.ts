@@ -1,17 +1,17 @@
 import * as WebSocket from 'ws';
 import { HandlerResult, MessageHandler, Method } from './message-handler';
-import { JSONRPC2MessageHandler } from './jsonrpc2/json-rpc-2-message-handler';
-import { JSONRPC2Error } from './jsonrpc2/utils';
 
-export class WebSocketServer {
+export abstract class WebSocketServer {
     protected static methods: Array<Method> = [];
+    protected readonly _namespaceMethods: Array<Method>;
+    protected _messageHandler: MessageHandler;
     public wss: WebSocket.Server;
-    private _messageHandler: MessageHandler;
 
     constructor(options: WebSocket.ServerOptions) {
         this.wss = new WebSocket.Server(options);
         this.wss.addListener('connection', (ws: WebSocket) => this._onConnection(ws));
         this._messageHandler = undefined;
+        this._namespaceMethods = this.getMethods();
     }
 
     setMessageHandler(messageHandler: MessageHandler): void {
@@ -28,17 +28,26 @@ export class WebSocketServer {
         return methods;
     }
 
+    protected _broadcastMessage(data: any): void {
+        for (let client of this.wss.clients) {
+            this._sendMessage(client as WebSocket, data);
+        }
+    }
+
+    protected _sendMessage(ws: WebSocket, data: any): void {
+        if (ws.readyState === WebSocket.OPEN) {
+            ws.send(JSON.stringify(data));
+        }
+    }
+
     protected _onConnection(ws: WebSocket): void {
         ws.on('message', (message: string) => this._onMessage(ws, message));
     }
 
     protected _onMessage(ws: WebSocket, message: string): void {
-        if (!this._messageHandler) this.setMessageHandler(new JSONRPC2MessageHandler());
-        try {
-            const handlerResult: HandlerResult = this._messageHandler.handle(message, this.getMethods());
-            if (handlerResult.data) ws.send(JSON.stringify(handlerResult.data));
-        } catch (err) {
-            console.log(err);
-        }
+        if (!this._messageHandler) throw Error('No message handler set.');
+        const handlerResult = this._messageHandler.handle(message, this._namespaceMethods);
+        const res = this._messageHandler.process(handlerResult);
+        if (res) this._sendMessage(ws, res);
     }
 }

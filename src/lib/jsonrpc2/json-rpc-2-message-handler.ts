@@ -1,4 +1,4 @@
-import {Method, MessageHandler, HandlerResult, Params} from '../message-handler';
+import { Params, Method, MessageHandler, HandlerResult } from '../message-handler';
 import { errors, JSONRPC2Request, JSONRPC2Response, JSONRPC2Error, JSONRPC2Id } from './utils';
 import { MethodValidatorResult, validateMethod } from '../method-validator';
 import { ParamValidatorResult, validateParams } from '../param-validator';
@@ -7,34 +7,48 @@ export class JSONRPC2MessageHandler implements MessageHandler {
     handle(message: any, methods: Array<Method>): HandlerResult {
         const res: HandlerResult = {
             error: true,
-            data: undefined,
+            data: {},
             func: undefined,
             args: undefined,
         };
-        let id = null;
 
         try {
-            const messageObject = this.parse(message);
-            const request = this.validateRequest(messageObject);
-
-            if (request.hasOwnProperty('id')) id = request.id;
-
-            const method = this.validateMethod(request.method, methods);
-            const methodArgs = this.validateParams(request.params, method.params);
+            const request = JSONRPC2MessageHandler.validateRequest(JSONRPC2MessageHandler.parse(message));
+            // set request as data
+            res.data['request'] = request;
+            const method = JSONRPC2MessageHandler.validateMethod(request.method, methods);
             res.func = method.func;
-            res.args = methodArgs;
-            const executionResult = method.func(...methodArgs);
-            if (request.hasOwnProperty('id'))
-                res.data = JSONRPC2MessageHandler.buildResponse(false, request.id, executionResult);
+            res.args = JSONRPC2MessageHandler.validateParams(request.params, method.params);
             res.error = false;
         } catch (err) {
-            const jsonrpc2Error: JSONRPC2Error = JSON.parse(err.message);
-            res.data = JSONRPC2MessageHandler.buildResponse(true, id, jsonrpc2Error);
+            // set json rpc 2 error as data
+            res.data['errorDetails'] = JSON.parse(err.message);
         }
         return res;
     }
 
-    private parse(message: string): JSONRPC2Request {
+    process(handlerResult: HandlerResult): any {
+        const requestId = handlerResult.data.request.hasOwnProperty('id') ? handlerResult.data.request.id : null;
+        let jsonRpc2Response: JSONRPC2Response;
+        if (!handlerResult.error) {
+            try {
+                const executionResult = handlerResult.func(...handlerResult.args);
+                // only build response if request wasn't a notification
+                if (requestId)
+                    jsonRpc2Response = JSONRPC2MessageHandler.buildResponse(false, requestId, executionResult);
+            } catch (err) {
+                // catch internal server error on method execution failure + build proper json rpc 2 response
+                const jsonRpc2Error = JSON.stringify(JSONRPC2MessageHandler.buildError(-32603));
+                return JSONRPC2MessageHandler.buildResponse(true, requestId, jsonRpc2Error);
+            }
+        } else {
+            jsonRpc2Response = JSONRPC2MessageHandler.buildResponse(true, requestId, handlerResult.data.errorDetails);
+        }
+
+        return jsonRpc2Response;
+    }
+
+    static parse(message: string): JSONRPC2Request {
         try {
             return JSON.parse(message);
         } catch (err) {
@@ -42,7 +56,7 @@ export class JSONRPC2MessageHandler implements MessageHandler {
         }
     }
 
-    private validateRequest(request: JSONRPC2Request): JSONRPC2Request {
+    static validateRequest(request: JSONRPC2Request): JSONRPC2Request {
         const missingProperties: Array<string> = [];
         let paramsOmitted = true;
         let isNotification = true;
@@ -108,7 +122,7 @@ export class JSONRPC2MessageHandler implements MessageHandler {
         return res;
     }
 
-    private validateMethod(methodName: string, registeredMethods: Array<Method>): Method {
+    static validateMethod(methodName: string, registeredMethods: Array<Method>): Method {
         const validatorResult: MethodValidatorResult = validateMethod(methodName, registeredMethods);
 
         if (validatorResult.error)
@@ -116,7 +130,7 @@ export class JSONRPC2MessageHandler implements MessageHandler {
         return validatorResult.method;
     }
 
-    private validateParams(providedParams: object | Array<any>, expectedParams: Params): Array<any> {
+    static validateParams(providedParams: object | Array<any>, expectedParams: Params): Array<any> {
         const validatorResult: ParamValidatorResult = validateParams(providedParams, expectedParams);
 
         if (validatorResult.error)
