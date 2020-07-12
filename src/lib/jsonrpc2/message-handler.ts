@@ -7,7 +7,10 @@ class JSONRPC2MessageHandler implements MessageHandler {
     handle(message: any, methods: Array<Method>): HandlerResult {
         const res: HandlerResult = {
             error: true,
-            data: { request: undefined, errorDetails: undefined },
+            data: {
+                request: {},
+                errorDetails: undefined
+            },
             func: undefined,
             args: undefined,
         };
