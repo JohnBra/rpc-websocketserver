@@ -6,6 +6,7 @@ import WebSocket from 'ws';
 import { register, param } from './lib/decorators';
 import { WebSocketServer } from './lib/websocket-server';
 import { JSONRPC2MessageHandler } from './lib/jsonrpc2/json-rpc-2-message-handler';
+import {SimpleMessageHandler} from "./lib/simple/simple-message-handler";
 
 const app = express();
 const server = http.createServer(app);
@@ -49,7 +50,7 @@ class RPCWebsocketServer extends WebSocketServer {
 // second.callMethod("cde", ["hi", 0]);
 
 const s = new RPCWebsocketServer({ noServer: true });
-s.setMessageHandler(new JSONRPC2MessageHandler());
+s.setMessageHandler(new SimpleMessageHandler());
 
 server.on('upgrade', function upgrade(request, socket, head) {
     const { pathname } = url.parse(request.url);
