@@ -1,5 +1,5 @@
 import * as WebSocket from 'ws';
-import { HandlerResult, MessageHandler, Method } from './message-handler';
+import { MessageHandler, Method } from './message-handler';
 
 export abstract class WebSocketServer {
     protected static methods: Array<Method> = [];
