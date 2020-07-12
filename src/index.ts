@@ -4,7 +4,7 @@ import url from 'url';
 
 import { register, param } from './lib/decorators';
 import { WebSocketServer } from './lib/websocket-server';
-import { JSONRPC2MessageHandler } from "./lib/jsonrpc2/json-rpc-2-message-handler";
+import { JSONRPC2MessageHandler } from './lib/jsonrpc2/json-rpc-2-message-handler';
 
 const app = express();
 const server = http.createServer(app);

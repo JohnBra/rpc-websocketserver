@@ -1,10 +1,12 @@
+import { Params } from './message-handler';
+
 export interface ParamValidatorResult {
     error: boolean;
     errorMessage: string;
     methodArgs: Array<any>;
 }
 
-export function validateParams(providedParams: object | Array<any>, expectedParams: object): ParamValidatorResult {
+export function validateParams(providedParams: object | Array<any>, expectedParams: Params): ParamValidatorResult {
     const res: ParamValidatorResult = { error: true, errorMessage: '', methodArgs: [] };
     const expectedParamsKeys: Array<string> = Object.keys(expectedParams);
 
@@ -32,8 +34,9 @@ export function validateParams(providedParams: object | Array<any>, expectedPara
                 return res;
             }
             if (typeof providedParams[expectedParamsKeys[i]] !== expectedParams[expectedParamsKeys[i]]) {
-                res.errorMessage =
-                    `Param '${expectedParamsKeys[i]}' must be of type '${expectedParams[expectedParamsKeys[i]]}'`;
+                res.errorMessage = `Param '${expectedParamsKeys[i]}' must be of type '${
+                    expectedParams[expectedParamsKeys[i]]
+                }'`;
                 return res;
             }
         }

@@ -1,4 +1,4 @@
-import { Method, MessageHandler, HandlerResult } from '../message-handler';
+import {Method, MessageHandler, HandlerResult, Params} from '../message-handler';
 import { errors, JSONRPC2Request, JSONRPC2Response, JSONRPC2Error, JSONRPC2Id } from './utils';
 import { MethodValidatorResult, validateMethod } from '../method-validator';
 import { ParamValidatorResult, validateParams } from '../param-validator';
@@ -116,7 +116,7 @@ export class JSONRPC2MessageHandler implements MessageHandler {
         return validatorResult.method;
     }
 
-    private validateParams(providedParams: object | Array<any>, expectedParams: object): Array<any> {
+    private validateParams(providedParams: object | Array<any>, expectedParams: Params): Array<any> {
         const validatorResult: ParamValidatorResult = validateParams(providedParams, expectedParams);
 
         if (validatorResult.error)

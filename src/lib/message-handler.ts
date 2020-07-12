@@ -1,7 +1,11 @@
+export interface Params {
+    [key: string]: string; // a param has its name as key and its type as value
+}
+
 export interface Method {
     namespace: string;
     method: string | symbol;
-    params: object;
+    params: Params;
     func: Function;
 }
 
