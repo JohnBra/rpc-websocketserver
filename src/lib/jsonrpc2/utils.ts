@@ -6,7 +6,7 @@ export const errors = new Map([
     [-32602, 'Invalid params'],
     [-32603, 'Internal error'],
     [-32604, 'Params not found'],
-    [-32700, 'Parse error']
+    [-32700, 'Parse error'],
 ]);
 
 export type JSONRPC2Id = string | number | null;
