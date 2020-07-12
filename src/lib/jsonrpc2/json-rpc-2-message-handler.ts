@@ -7,7 +7,7 @@ export class JSONRPC2MessageHandler implements MessageHandler {
     handle(message: any, methods: Array<Method>): HandlerResult {
         const res: HandlerResult = {
             error: true,
-            data: {},
+            data: { request: undefined, errorDetails: undefined },
             func: undefined,
             args: undefined,
         };
@@ -15,21 +15,21 @@ export class JSONRPC2MessageHandler implements MessageHandler {
         try {
             const request = JSONRPC2MessageHandler.validateRequest(JSONRPC2MessageHandler.parse(message));
             // set request as data
-            res.data['request'] = request;
+            res.data.request = request;
             const method = JSONRPC2MessageHandler.validateMethod(request.method, methods);
             res.func = method.func;
             res.args = JSONRPC2MessageHandler.validateParams(request.params, method.params);
             res.error = false;
         } catch (err) {
             // set json rpc 2 error as data
-            res.data['errorDetails'] = JSON.parse(err.message);
+            res.data.errorDetails = JSON.parse(err.message);
         }
         return res;
     }
 
     process(handlerResult: HandlerResult): any {
         const requestId = handlerResult.data.request.hasOwnProperty('id') ? handlerResult.data.request.id : null;
-        let jsonRpc2Response: JSONRPC2Response;
+        let jsonRpc2Response;
         if (!handlerResult.error) {
             try {
                 const executionResult = handlerResult.func(...handlerResult.args);
@@ -44,6 +44,8 @@ export class JSONRPC2MessageHandler implements MessageHandler {
         } else {
             jsonRpc2Response = JSONRPC2MessageHandler.buildResponse(true, requestId, handlerResult.data.errorDetails);
         }
+
+        if (jsonRpc2Response) jsonRpc2Response = JSON.stringify(jsonRpc2Response);
 
         return jsonRpc2Response;
     }

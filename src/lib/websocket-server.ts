@@ -7,7 +7,7 @@ export abstract class WebSocketServer {
     protected _messageHandler: MessageHandler;
     public wss: WebSocket.Server;
 
-    constructor(options: WebSocket.ServerOptions) {
+    protected constructor(options: WebSocket.ServerOptions) {
         this.wss = new WebSocket.Server(options);
         this.wss.addListener('connection', (ws: WebSocket) => this._onConnection(ws));
         this._messageHandler = undefined;
@@ -35,9 +35,7 @@ export abstract class WebSocketServer {
     }
 
     protected _sendMessage(ws: WebSocket, data: any): void {
-        if (ws.readyState === WebSocket.OPEN) {
-            ws.send(JSON.stringify(data));
-        }
+        if (ws.readyState === WebSocket.OPEN) ws.send(data);
     }
 
     protected _onConnection(ws: WebSocket): void {
