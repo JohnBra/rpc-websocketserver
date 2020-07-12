@@ -29,7 +29,7 @@ export abstract class WebSocketServer {
     }
 
     protected _broadcastMessage(data: any): void {
-        for (let client of this.wss.clients) {
+        for (const client of this.wss.clients) {
             this._sendMessage(client as WebSocket, data);
         }
     }
