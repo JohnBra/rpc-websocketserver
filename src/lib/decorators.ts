@@ -26,7 +26,7 @@ export function register(methodName?: string) {
     };
 }
 
-// TODO add limitations of parameters to readme (any type will be object..., no deep param type checking implemented)
+// TODO add limitations of parameters to readme (no type checking implemented)
 export function param(name: string) {
     return function (target: Object, propertyKey: string | symbol, parameterIndex: number): void {
         const paramNames = Reflect.getOwnMetadata(PARAMETER_NAME_KEY, target, propertyKey) || [];

@@ -12,31 +12,19 @@ export function validateParams(providedParams: object | Array<any>, expectedPara
 
     if (Array.isArray(providedParams)) {
         if (providedParams.length !== expectedParamsKeys.length) {
-            res.errorMessage = `Expected ${expectedParamsKeys.length} params. Got ${providedParams.length}.`;
+            res.errorMessage = `Expected ${expectedParamsKeys.length} params. Received ${providedParams.length}.`;
             return res;
-        }
-        for (let i = 0; i < providedParams.length; i++) {
-            if (typeof providedParams[i] !== expectedParams[expectedParamsKeys[i]]) {
-                res.errorMessage = `Param on index ${i} must be of type '${expectedParams[expectedParamsKeys[i]]}'`;
-                return res;
-            }
         }
     } else if (typeof providedParams === 'object' && providedParams !== null) {
         const providedParamsKeys = Object.keys(providedParams);
         if (providedParamsKeys.length !== expectedParamsKeys.length) {
-            res.errorMessage = `Expected ${expectedParamsKeys.length} params. Got ${providedParamsKeys.length}.`;
+            res.errorMessage = `Expected ${expectedParamsKeys.length} params. Received ${providedParamsKeys.length}.`;
             return res;
         }
 
         for (let i = 0; i < expectedParamsKeys.length; i++) {
             if (!providedParams.hasOwnProperty(expectedParamsKeys[i])) {
                 res.errorMessage = `Params must include '${expectedParamsKeys[i]}'`;
-                return res;
-            }
-            if (typeof providedParams[expectedParamsKeys[i]] !== expectedParams[expectedParamsKeys[i]]) {
-                res.errorMessage = `Param '${expectedParamsKeys[i]}' must be of type '${
-                    expectedParams[expectedParamsKeys[i]]
-                }'`;
                 return res;
             }
         }

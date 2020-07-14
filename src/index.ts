@@ -17,7 +17,7 @@ class RPCNamespaceA extends WebSocketServer {
         console.log('namespace a methods: ', this._namespaceMethods);
     }
     @register('blabla')
-    sum(@param('a') a: number, @param('b') b: string) {
+    sum(@param('a') a: any, @param('b') b: string | number) {
         console.log(`adding a ${a} and b ${b}`);
         return a + b;
     }
