@@ -6,6 +6,7 @@ const PARAMETER_NAME_KEY = Symbol('parameterName');
 export function register(methodName?: string) {
     return function (target: any, propertyKey: string | symbol, descriptor: PropertyDescriptor): void {
         const paramNames: Array<string> = Reflect.getOwnMetadata(PARAMETER_NAME_KEY, target, propertyKey) || [];
+        // param types are being added but not checked -> maybe checked in the future
         const paramTypes: Array<any> = Reflect.getMetadata('design:paramtypes', target, propertyKey) || [];
 
         const params: Params = {};
