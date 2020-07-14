@@ -21,7 +21,7 @@ export function validateParams(providedParams: object | Array<any>, expectedPara
                 return res;
             }
         }
-    } else if (typeof providedParams === 'object') {
+    } else if (typeof providedParams === 'object' && providedParams !== null) {
         const providedParamsKeys = Object.keys(providedParams);
         if (providedParamsKeys.length !== expectedParamsKeys.length) {
             res.errorMessage = `Expected ${expectedParamsKeys.length} params. Got ${providedParamsKeys.length}.`;
