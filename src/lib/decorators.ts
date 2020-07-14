@@ -4,7 +4,7 @@ import { Method, Params } from './message-handler';
 const PARAMETER_NAME_KEY = Symbol('parameterName');
 
 export function register(methodName?: string) {
-    return function (target: any, propertyKey: string | symbol, descriptor: PropertyDescriptor) {
+    return function (target: any, propertyKey: string | symbol, descriptor: PropertyDescriptor): void {
         const paramNames: Array<string> = Reflect.getOwnMetadata(PARAMETER_NAME_KEY, target, propertyKey) || [];
         const paramTypes: Array<any> = Reflect.getMetadata('design:paramtypes', target, propertyKey) || [];
 
@@ -28,7 +28,7 @@ export function register(methodName?: string) {
 
 // TODO add limitations of parameters to readme (any type will be object..., no deep param type checking implemented)
 export function param(name: string) {
-    return function (target: Object, propertyKey: string | symbol, parameterIndex: number) {
+    return function (target: Object, propertyKey: string | symbol, parameterIndex: number): void {
         const paramNames = Reflect.getOwnMetadata(PARAMETER_NAME_KEY, target, propertyKey) || [];
 
         paramNames[parameterIndex] = name;
