@@ -2,12 +2,19 @@
   "compilerOptions": {
     "module": "commonjs",
     "esModuleInterop": true,
-    "target": "ES2018",
+    "target": "es5",
+    "lib": ["es2015"],
     "sourceMap": true,
     "outDir": "dist",
+    "rootDir": "./src",
+    "removeComments": true,
+    "strict": true,
+    "strictNullChecks": true,
+    "moduleResolution": "node",
+    "forceConsistentCasingInFileNames": true,
     "experimentalDecorators": true,
     "emitDecoratorMetadata": true
   },
-  "include": ["src//*"],
-  "exclude": ["node_modules", "/*.spec.ts"]
+  "include": ["src/**/*"],
+  "exclude": ["node_modules", "**/*.spec.ts"]
 }
