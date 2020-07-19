@@ -19,7 +19,7 @@ class SimpleMessageHandler implements MessageHandler {
             res.error = false;
         } catch (err) {
             res.data = err.message;
-            console.error(err.message);
+            console.log(err.message);
         }
 
         return res;
@@ -31,7 +31,7 @@ class SimpleMessageHandler implements MessageHandler {
             try {
                 response = handlerResult.func(...handlerResult.args);
             } catch (err) {
-                console.error(err);
+                console.log(err);
             }
         } else {
             response = handlerResult.data;
