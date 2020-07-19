@@ -1,3 +1,5 @@
+// TODO remove express from dependencies
+// TODO move ws from dependencies to peer dependencies
 import express from 'express';
 import http from 'http';
 import url from 'url';
