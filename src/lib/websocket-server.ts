@@ -2,8 +2,8 @@ import * as WebSocket from 'ws';
 import { MessageHandler, Method } from './message-handler';
 
 export abstract class WebSocketServer {
-    protected static methods: Array<Method> = [];
-    protected readonly _namespaceMethods: Array<Method>;
+    protected static methods: Array<Method> = []; // TODO make this a set
+    protected readonly _namespaceMethods: Array<Method>; // TODO make this a set
     protected _messageHandler: MessageHandler;
     public wss: WebSocket.Server;
 
