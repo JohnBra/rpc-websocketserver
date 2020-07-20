@@ -7,14 +7,10 @@ export abstract class WebSocketServer {
     protected _messageHandler: MessageHandler;
     public wss: WebSocket.Server;
 
-    protected constructor(options: WebSocket.ServerOptions) {
+    protected constructor(messageHandler: MessageHandler, options: WebSocket.ServerOptions) {
         this.wss = new WebSocket.Server(options);
         this.wss.addListener('connection', (ws: WebSocket) => this._onConnection(ws));
-        this._messageHandler = undefined;
         this._namespaceMethods = this.getMethods();
-    }
-
-    setMessageHandler(messageHandler: MessageHandler): void {
         this._messageHandler = messageHandler;
     }
 
@@ -29,9 +25,7 @@ export abstract class WebSocketServer {
     }
 
     protected _broadcastMessage(data: any): void {
-        for (const client of this.wss.clients) {
-            this._sendMessage(client as WebSocket, data);
-        }
+        this.wss.clients.forEach((client) => this._sendMessage(client as WebSocket, data));
     }
 
     protected _sendMessage(ws: WebSocket, data: any): void {

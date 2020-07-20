@@ -6,7 +6,7 @@ export interface ParamValidatorResult {
     methodArgs: Array<any>;
 }
 
-export function validateParams(providedParams: object | Array<any>, expectedParams: Params): ParamValidatorResult {
+export function validateParams(providedParams: Params | Array<any>, expectedParams: Params): ParamValidatorResult {
     const res: ParamValidatorResult = { error: true, errorMessage: '', methodArgs: [] };
     const expectedParamsKeys: Array<string> = Object.keys(expectedParams);
 
@@ -37,7 +37,8 @@ export function validateParams(providedParams: object | Array<any>, expectedPara
 
     if (!Array.isArray(providedParams)) {
         for (let i = 0; i < expectedParamsKeys.length; i++) {
-            res.methodArgs.push(providedParams[expectedParamsKeys[i]]);
+            const p: any = providedParams[expectedParamsKeys[i]];
+            res.methodArgs.push(p);
         }
     } else {
         res.methodArgs = providedParams;

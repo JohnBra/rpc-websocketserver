@@ -2,6 +2,7 @@ import { Params, Method, MessageHandler, HandlerResult } from '../message-handle
 import { errors, JSONRPC2Request, JSONRPC2Response, JSONRPC2Error, JSONRPC2Id } from './utils';
 import { MethodValidatorResult, validateMethod } from '../method-validator';
 import { ParamValidatorResult, validateParams } from '../param-validator';
+import { NOOP } from '../constants';
 
 class JSONRPC2MessageHandler implements MessageHandler {
     handle(message: any, methods: Array<Method>): HandlerResult {
@@ -11,8 +12,8 @@ class JSONRPC2MessageHandler implements MessageHandler {
                 request: {},
                 errorDetails: undefined
             },
-            func: undefined,
-            args: undefined,
+            func: NOOP,
+            args: [],
         };
 
         try {
@@ -116,13 +117,13 @@ class JSONRPC2MessageHandler implements MessageHandler {
                 ),
             );
 
-        const res = {
+        const res: JSONRPC2Request = {
             jsonrpc: request.jsonrpc,
             method: request.method,
             params: paramsOmitted ? {} : request.params,
         };
 
-        if (!isNotification) res['id'] = request.id;
+        if (!isNotification) res.id = request.id;
 
         return res;
     }

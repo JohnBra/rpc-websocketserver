@@ -1,14 +1,15 @@
 import { HandlerResult, MessageHandler, Method, Params } from '../message-handler';
 import { MethodValidatorResult, validateMethod } from '../method-validator';
 import { ParamValidatorResult, validateParams } from '../param-validator';
+import { NOOP } from '../constants';
 
 class SimpleMessageHandler implements MessageHandler {
     handle(message: any, methods: Array<Method>): HandlerResult {
         const res: HandlerResult = {
             error: true,
             data: undefined,
-            func: undefined,
-            args: undefined,
+            func: NOOP,
+            args: [],
         };
 
         try {

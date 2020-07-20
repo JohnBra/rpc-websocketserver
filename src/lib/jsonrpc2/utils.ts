@@ -14,7 +14,7 @@ export type JSONRPC2Id = string | number | null;
 export interface JSONRPC2Request {
     jsonrpc: string;                // this must always be exactly "2.0"
     method: string;
-    params?: object | Array<any>;
+    params: object | Array<any>;
     id?: JSONRPC2Id;    // if omitted -> request is notification
 }
 

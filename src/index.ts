@@ -9,13 +9,14 @@ import { register, param } from './lib/decorators';
 import { WebSocketServer } from './lib/websocket-server';
 import JSONRPC2MessageHandler from './lib/jsonrpc2/message-handler';
 import SimpleMessageHandler from './lib/simple/message-handler';
+import { MessageHandler } from './lib/message-handler';
 
 const app = express();
 const server = http.createServer(app);
 
 class RPCNamespaceA extends WebSocketServer {
-    constructor(options: WebSocket.ServerOptions) {
-        super(options);
+    constructor(messageHandler: MessageHandler, options: WebSocket.ServerOptions) {
+        super(messageHandler, options);
         console.log('namespace a methods: ', this._namespaceMethods);
     }
     @register('blabla')
@@ -26,8 +27,8 @@ class RPCNamespaceA extends WebSocketServer {
 }
 
 class RPCNamespaceB extends WebSocketServer {
-    constructor(options: WebSocket.ServerOptions) {
-        super(options);
+    constructor(messageHandler: MessageHandler, options: WebSocket.ServerOptions) {
+        super(messageHandler, options);
         console.log('namespace b methods: ', this._namespaceMethods);
     }
     @register()
@@ -37,10 +38,8 @@ class RPCNamespaceB extends WebSocketServer {
     }
 }
 
-const a = new RPCNamespaceA({ noServer: true });
-const b = new RPCNamespaceB({ noServer: true });
-a.setMessageHandler(new SimpleMessageHandler());
-b.setMessageHandler(new JSONRPC2MessageHandler());
+const a = new RPCNamespaceA(new SimpleMessageHandler(), { noServer: true });
+const b = new RPCNamespaceB(new JSONRPC2MessageHandler(), { noServer: true });
 
 server.on('upgrade', function upgrade(request, socket, head) {
     const { pathname } = url.parse(request.url);
