@@ -1,5 +1,12 @@
 import { Params, Method, MessageHandler, HandlerResult } from '../message-handler';
-import { errors, JSONRPC2Request, JSONRPC2Response, JSONRPC2Error, JSONRPC2Id } from './utils';
+import {
+    JSON_RPC_ERRORS,
+    JSON_RPC_VERSION,
+    JSONRPC2Request,
+    JSONRPC2Response,
+    JSONRPC2Error,
+    JSONRPC2Id,
+} from './utils';
 import { MethodValidatorResult, validateMethod } from '../method-validator';
 import { ParamValidatorResult, validateParams } from '../param-validator';
 import { NOOP } from '../constants';
@@ -10,7 +17,7 @@ class JSONRPC2MessageHandler implements MessageHandler {
             error: true,
             data: {
                 request: {},
-                errorDetails: undefined
+                errorDetails: undefined,
             },
             func: NOOP,
             args: [],
@@ -69,9 +76,14 @@ class JSONRPC2MessageHandler implements MessageHandler {
 
         if (!request.hasOwnProperty('jsonrpc')) {
             missingProperties.push('jsonrpc');
-        } else if (request.jsonrpc !== '2.0')
+        } else if (request.jsonrpc !== JSON_RPC_VERSION)
             throw new Error(
-                JSON.stringify(JSONRPC2MessageHandler.buildError(-32600, `Value of 'jsonrpc' must be exactly "2.0"`)),
+                JSON.stringify(
+                    JSONRPC2MessageHandler.buildError(
+                        -32600,
+                        `Value of 'jsonrpc' must be exactly "${JSON_RPC_VERSION}"`,
+                    ),
+                ),
             );
         if (!request.hasOwnProperty('method')) {
             missingProperties.push('method');
@@ -145,14 +157,14 @@ class JSONRPC2MessageHandler implements MessageHandler {
     }
 
     static buildResponse(error: boolean, id: JSONRPC2Id, data: any | JSONRPC2Error): JSONRPC2Response {
-        if (error) return { jsonrpc: '2.0', error: data, id };
+        if (error) return { jsonrpc: JSON_RPC_VERSION, error: data, id };
         return { jsonrpc: '2.0', result: data, id };
     }
 
     static buildError(code: number, details?: string | object): JSONRPC2Error {
         const error: JSONRPC2Error = {
             code,
-            message: errors.get(code) || 'Internal Server Error',
+            message: JSON_RPC_ERRORS.get(code) || 'Internal Server Error',
         };
 
         if (details) error.data = details;
