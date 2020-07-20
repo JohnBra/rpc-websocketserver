@@ -1,6 +1,5 @@
-export interface Params {
-    [key: string]: any; // a param has a string key and an any value, if it is expected param -> value is of type string
-}
+// a param has a string key and an any value, if it is expected param -> value is of type string
+export type Params = Record<string, any>;
 
 export interface Method {
     namespace: string;
