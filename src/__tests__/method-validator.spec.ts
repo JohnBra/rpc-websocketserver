@@ -17,10 +17,11 @@ describe('Method validator utility', () => {
     });
 
     test('validateMethod() should return MethodValidatorResult with error if method is not registered', () => {
-        const validatorResult: MethodValidatorResult = validateMethod('foo', registeredMethods);
+        const unknownMethodName = 'foo';
+        const validatorResult: MethodValidatorResult = validateMethod(unknownMethodName, registeredMethods);
 
         expect(validatorResult.error).toBe(true);
-        expect(validatorResult.errorMessage).toEqual('Method with name \'foo\' could not be found.');
+        expect(validatorResult.errorMessage).toEqual(`Method with name '${unknownMethodName}' could not be found.`);
         expect(validatorResult.method).toMatchObject(EMPTY_METHOD);
     });
 });
