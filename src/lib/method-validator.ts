@@ -9,7 +9,7 @@ export interface MethodValidatorResult {
 
 export function validateMethod(methodName: string, registeredMethods: Array<Method>): MethodValidatorResult {
     for (let i = 0; i < registeredMethods.length; i++) {
-        if (methodName === registeredMethods[i].method) {
+        if (methodName === registeredMethods[i].name) {
             return { error: false, errorMessage: '', method: registeredMethods[i] };
         }
     }

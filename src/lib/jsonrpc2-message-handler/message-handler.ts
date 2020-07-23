@@ -48,7 +48,7 @@ class JSONRPC2MessageHandler implements MessageHandler {
                 if (requestId)
                     jsonRpc2Response = JSONRPC2MessageHandler.buildResponse(false, requestId, executionResult);
             } catch (err) {
-                // catch internal server error on method execution failure + build proper json rpc 2 response
+                // catch internal server error on name execution failure + build proper json rpc 2 response
                 const jsonRpc2Error = JSON.stringify(JSONRPC2MessageHandler.buildError(-32603));
                 return JSONRPC2MessageHandler.buildResponse(true, requestId, jsonRpc2Error);
             }

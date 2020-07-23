@@ -3,7 +3,7 @@ export type Params = Record<string, any>;
 
 export interface Method {
     namespace: string;
-    method: string | symbol;
+    name: string | symbol;
     params: Params;
     func: Function;
 }

@@ -18,7 +18,7 @@ export function register(methodName?: string) {
 
         const method: Method = {
             namespace: target.constructor.name,
-            method: methodName || propertyKey,
+            name: methodName || propertyKey,
             func: target[propertyKey],
             params,
         };
