@@ -1,7 +1,7 @@
 import * as WebSocket from 'ws';
 import { WebSocketServer } from '../lib/websocket-server';
 import { MessageHandler } from '../lib/message-handler';
-import SimpleMessageHandler from '../lib/simple/message-handler';
+import SimpleMessageHandler from '../lib/simple-message-handler/message-handler';
 
 
 

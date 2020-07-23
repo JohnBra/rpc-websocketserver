@@ -7,8 +7,8 @@ import url from 'url';
 import * as WebSocket from 'ws';
 import { register, param } from './lib/decorators';
 import { WebSocketServer } from './lib/websocket-server';
-import JSONRPC2MessageHandler from './lib/jsonrpc2/message-handler';
-import SimpleMessageHandler from './lib/simple/message-handler';
+import JSONRPC2MessageHandler from './lib/jsonrpc2-message-handler/message-handler';
+import SimpleMessageHandler from './lib/simple-message-handler/message-handler';
 import { MessageHandler } from './lib/message-handler';
 
 const app = express();
