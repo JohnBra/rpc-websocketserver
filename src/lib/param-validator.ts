@@ -29,7 +29,7 @@ export function validateParams(providedParams: Params | Array<any>, expectedPara
             }
         }
     } else {
-        res.errorMessage = "Params must be one of 'object' or 'array'";
+        res.errorMessage = `Params must be one of 'object' or 'array'`;
         return res;
     }
 
