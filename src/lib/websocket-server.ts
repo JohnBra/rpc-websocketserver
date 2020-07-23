@@ -2,8 +2,8 @@ import * as WebSocket from 'ws';
 import { MessageHandler, Method } from './message-handler';
 
 export abstract class WebSocketServer {
-    protected static methods: Array<Method> = []; // TODO make this a set
-    protected readonly _namespaceMethods: Array<Method>; // TODO make this a set
+    protected static methods: Set<Method> = new Set();
+    protected readonly _namespaceMethods: Array<Method>; // TODO make this a map?
     protected _messageHandler: MessageHandler;
     public wss: WebSocket.Server;
 
@@ -16,11 +16,10 @@ export abstract class WebSocketServer {
 
     getMethods(): Array<Method> {
         const methods: Array<Method> = [];
-        for (const method of WebSocketServer.methods) {
-            if (Object.getPrototypeOf(this).constructor.name === method.namespace) {
-                methods.push(method);
-            }
-        }
+        const thisNamespace = Object.getPrototypeOf(this).constructor.name;
+        WebSocketServer.methods.forEach((method: Method) => {
+            if (thisNamespace === method.namespace) methods.push(method);
+        });
         return methods;
     }
 

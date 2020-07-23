@@ -23,7 +23,7 @@ export function register(methodName?: string) {
             params,
         };
 
-        target.constructor.methods.push(method); // TODO use add for set instead of push
+        target.constructor.methods.add(method);
     };
 }
 
