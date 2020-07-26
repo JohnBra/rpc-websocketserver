@@ -5,7 +5,9 @@ import { EMPTY_METHOD } from '../lib/constants';
 describe('Method validator utility', () => {
     const registeredMethodA = { namespace: 'MockNamespace', name: 'mockMethodA', params: {}, func: () => {} };
     const registeredMethodB = { namespace: 'MockNamespace', name: 'mockMethodB', params: {}, func: () => {} }
-    const registeredMethods: Array<Method> = [registeredMethodA, registeredMethodB];
+    const registeredMethods = new Map<string, Method>();
+    registeredMethods.set(registeredMethodA.name, registeredMethodA);
+    registeredMethods.set(registeredMethodB.name, registeredMethodB);
 
     test('validateMethod() should return MethodValidatorResult with called method if it is registered', () => {
         const validatorResult: MethodValidatorResult = validateMethod(registeredMethodB.name, registeredMethods);
