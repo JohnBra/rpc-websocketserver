@@ -4,7 +4,7 @@ import { ParamValidatorResult, validateParams } from '../param-validator';
 import { NOOP } from '../constants';
 
 class SimpleMessageHandler implements MessageHandler {
-    handle(message: any, methods: Map<string, Method>): HandlerResult {
+    handle(message: string, methods: Map<string, Method>): HandlerResult {
         const res: HandlerResult = {
             error: true,
             data: undefined,
@@ -14,9 +14,9 @@ class SimpleMessageHandler implements MessageHandler {
 
         try {
             const req = JSON.parse(message);
-            const method = SimpleMessageHandler.validateMethod(req.method, methods);
+            const method = SimpleMessageHandler._validateMethod(req.method, methods);
+            res.args = SimpleMessageHandler._validateParams(req.params, method.params);
             res.func = method.func;
-            res.args = SimpleMessageHandler.validateParams(req.params, method.params);
             res.error = false;
         } catch (err) {
             res.data = err.message;
@@ -40,14 +40,14 @@ class SimpleMessageHandler implements MessageHandler {
         return response;
     }
 
-    static validateMethod(methodName: string, registeredMethods: Map<string, Method>): Method {
+    private static _validateMethod(methodName: string, registeredMethods: Map<string, Method>): Method {
         const validatorResult: MethodValidatorResult = validateMethod(methodName, registeredMethods);
 
         if (validatorResult.error) throw new Error(validatorResult.errorMessage);
         return validatorResult.method;
     }
 
-    static validateParams(providedParams: object | Array<any>, expectedParams: Params): Array<any> {
+    private static _validateParams(providedParams: object | Array<any>, expectedParams: Params): Array<any> {
         const validatorResult: ParamValidatorResult = validateParams(providedParams, expectedParams);
 
         if (validatorResult.error) throw new Error(validatorResult.errorMessage);

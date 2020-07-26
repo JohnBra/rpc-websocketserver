@@ -12,7 +12,7 @@ import {
 } from './utils';
 
 class JSONRPC2MessageHandler implements MessageHandler {
-    handle(message: any, methods: Map<string, Method>): HandlerResult {
+    handle(message: string, methods: Map<string, Method>): HandlerResult {
         const res: HandlerResult = {
             error: true,
             data: {
