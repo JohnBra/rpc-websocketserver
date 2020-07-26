@@ -13,7 +13,7 @@ export function validateMethod(methodName: string, registeredMethods: Map<string
 
     return {
         error: true,
-        errorMessage: `Method with name '${String(methodName)}' could not be found.`,
+        errorMessage: `Method with name '${methodName}' could not be found.`,
         method: EMPTY_METHOD
     };
 }
