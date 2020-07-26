@@ -2,6 +2,24 @@ import SimpleMessageHandler from '../../lib/simple-message-handler/message-handl
 import {HandlerResult, Method} from '../../lib/message-handler';
 import { NOOP } from '../../lib/constants';
 
+class MockClass {
+    getThrowErrorFunction(): Function {
+        return this.throwError;
+    }
+
+    getMockSumFunction(): Function {
+        return this.mockSum;
+    }
+
+    mockSum(a: string, b: number): string {
+        return a + b;
+    }
+
+    throwError(): void {
+        throw Error('Some error');
+    }
+}
+
 describe('SimpleMessageHandler class', () => {
     let registeredMethodA: Method;
     let registeredMethods: Map<string, Method>;
@@ -94,5 +112,57 @@ describe('SimpleMessageHandler class', () => {
         expect(handlerResult.data).not.toBe(undefined);
         expect(handlerResult.func).toEqual(NOOP);
         expect(handlerResult.args).toEqual([]);
+    });
+
+    test('process() should call function with provided func and args if error is false' +
+        ' as well as return function result', () => {
+        const simpleMessageHandler = new SimpleMessageHandler();
+        const mockClass = new MockClass();
+        const spyMockSum = jest.spyOn(MockClass.prototype, 'mockSum');
+        const handlerResult: HandlerResult = {
+            error: false,
+            data: undefined,
+            args: ['abc', 1],
+            func: mockClass.getMockSumFunction()
+        };
+
+        const res = simpleMessageHandler.process(handlerResult);
+
+        expect(res).toBe('abc1');
+        expect(spyMockSum).toHaveBeenCalledTimes(1);
+        spyMockSum.mockClear();
+    });
+
+    test('process() should return handler result data if error is true', () => {
+        const simpleMessageHandler = new SimpleMessageHandler();
+        const handlerResult: HandlerResult = { error: true, data: 'some error message', args: [], func: NOOP };
+
+        const res = simpleMessageHandler.process(handlerResult);
+
+        expect(res).toBe('some error message');
+    });
+
+    test('process() should console log error if called function throws', () => {
+        const simpleMessageHandler = new SimpleMessageHandler();
+        const originalLog = console.log;
+        console.log = jest.fn();
+        const spyLog = jest.spyOn(console, 'log');
+        const mockClass = new MockClass();
+        const handlerResult: HandlerResult = {
+            error: false,
+            data: undefined,
+            args: [],
+            func: mockClass.getThrowErrorFunction()
+        };
+
+        function callFunctionThatThrowsError() {
+            simpleMessageHandler.process(handlerResult);
+        }
+
+        expect(callFunctionThatThrowsError).not.toThrow(Error);
+        expect(spyLog).toHaveBeenCalledTimes(1);
+
+        spyLog.mockClear();
+        console.log = originalLog;
     });
 });
