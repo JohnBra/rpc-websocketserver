@@ -164,7 +164,7 @@ class JSONRPC2MessageHandler implements MessageHandler {
     static buildError(code: number, details?: string | object): JSONRPC2Error {
         const error: JSONRPC2Error = {
             code,
-            message: JSON_RPC_ERRORS.get(code) || 'Internal Server Error',
+            message: JSON_RPC_ERRORS.get(code) || 'Internal error',
         };
 
         if (details) error.data = details;
