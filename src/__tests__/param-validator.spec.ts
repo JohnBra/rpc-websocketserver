@@ -7,7 +7,6 @@ describe('Params validator utility', () => {
         'b': 'number',  // value: 1
     };
     const expectedParamsKeys = Object.keys(expectedParams);
-
     const expectedMethodArgs: Array<any> = ['abc', 1];
 
     test('validateParams() should return ParamValidatorResult ' +
@@ -22,7 +21,7 @@ describe('Params validator utility', () => {
     });
 
     test('validateParams() should return ParamValidatorResult ' +
-        'method args in correct order in any provided constellation', () => {
+        'method args in correct order in any provided constellation provided in object', () => {
         const providedParamsObjectA = { 'b': 1, 'a': 'abc' };
         const providedParamsObjectB = { 'a': 'abc', 'b': 1 };
 
