@@ -3,7 +3,7 @@ export type Params = Record<string, any>;
 
 export interface Method {
     namespace: string;
-    name: string | symbol;
+    name: string;
     params: Params;
     func: Function;
 }
@@ -16,6 +16,6 @@ export interface HandlerResult {
 }
 
 export interface MessageHandler {
-    handle(message: any, methods: Array<Method>): HandlerResult;
+    handle(message: any, methods: Map<string, Method>): HandlerResult;
     process(handlerResult: HandlerResult): any;
 }

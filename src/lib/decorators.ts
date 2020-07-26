@@ -16,9 +16,11 @@ export function register(methodName?: string) {
             }
         }
 
+        const functionName: string = typeof propertyKey === 'string' ? propertyKey : propertyKey.toString();
+
         const method: Method = {
             namespace: target.constructor.name,
-            name: methodName || propertyKey,
+            name: methodName || functionName,
             func: target[propertyKey],
             params,
         };

@@ -7,16 +7,13 @@ export interface MethodValidatorResult {
     method: Method;
 }
 
-export function validateMethod(methodName: string, registeredMethods: Array<Method>): MethodValidatorResult {
-    for (let i = 0; i < registeredMethods.length; i++) {
-        if (methodName === registeredMethods[i].name) {
-            return { error: false, errorMessage: '', method: registeredMethods[i] };
-        }
-    }
+export function validateMethod(methodName: string, registeredMethods: Map<string, Method>): MethodValidatorResult {
+    const method = registeredMethods.get(methodName);
+    if (method) return { error: false, errorMessage: '', method: method };
 
     return {
         error: true,
-        errorMessage: `Method with name '${methodName}' could not be found.`,
+        errorMessage: `Method with name '${String(methodName)}' could not be found.`,
         method: EMPTY_METHOD
     };
 }

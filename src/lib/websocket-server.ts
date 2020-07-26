@@ -3,27 +3,22 @@ import { MessageHandler, Method } from './message-handler';
 
 export abstract class WebSocketServer {
     protected static methods: Set<Method> = new Set();
-    protected readonly _namespaceMethods: Array<Method>; // TODO make this a map?
+    protected readonly _namespaceMethods: Map<string, Method>;
     protected _messageHandler: MessageHandler;
     public wss: WebSocket.Server;
 
     protected constructor(messageHandler: MessageHandler, options: WebSocket.ServerOptions) {
         this.wss = new WebSocket.Server(options);
         this.wss.addListener('connection', (ws: WebSocket) => this._onConnection(ws));
-        this._namespaceMethods = this.getMethods();
+        this._namespaceMethods = this._initNamespaceMethods();
         this._messageHandler = messageHandler;
     }
 
-    getMethods(): Array<Method> {
-        const methods: Array<Method> = [];
-        const thisNamespace = Object.getPrototypeOf(this).constructor.name;
-        WebSocketServer.methods.forEach((method: Method) => {
-            if (thisNamespace === method.namespace) methods.push(method);
-        });
-        return methods;
+    getMethods (): Map<string, Method> {
+        return this._namespaceMethods;
     }
 
-    protected _broadcastMessage(data: any): void {
+    broadcastMessage(data: any): void {
         this.wss.clients.forEach((client) => this._sendMessage(client as WebSocket, data));
     }
 
@@ -39,5 +34,14 @@ export abstract class WebSocketServer {
         const handlerResult = this._messageHandler.handle(message, this._namespaceMethods);
         const res = this._messageHandler.process(handlerResult);
         if (res) this._sendMessage(ws, res);
+    }
+
+    private _initNamespaceMethods(): Map<string, Method> {
+        const namespaceMethods = new Map<string, Method>();
+        const thisNamespace = Object.getPrototypeOf(this).constructor.name;
+        WebSocketServer.methods.forEach((method: Method) => {
+            if (thisNamespace === method.namespace) namespaceMethods.set(method.name, method);
+        });
+        return namespaceMethods;
     }
 }

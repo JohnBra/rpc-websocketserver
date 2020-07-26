@@ -4,7 +4,7 @@ import { ParamValidatorResult, validateParams } from '../param-validator';
 import { NOOP } from '../constants';
 
 class SimpleMessageHandler implements MessageHandler {
-    handle(message: any, methods: Array<Method>): HandlerResult {
+    handle(message: any, methods: Map<string, Method>): HandlerResult {
         const res: HandlerResult = {
             error: true,
             data: undefined,
@@ -41,17 +41,17 @@ class SimpleMessageHandler implements MessageHandler {
         return response;
     }
 
-    static validateMethod(methodName: string, registeredMethods: Array<Method>): Method {
+    static validateMethod(methodName: string, registeredMethods: Map<string, Method>): Method {
         const validatorResult: MethodValidatorResult = validateMethod(methodName, registeredMethods);
 
-        if (validatorResult.error) throw new Error(JSON.stringify(validatorResult.errorMessage));
+        if (validatorResult.error) throw new Error(validatorResult.errorMessage);
         return validatorResult.method;
     }
 
     static validateParams(providedParams: object | Array<any>, expectedParams: Params): Array<any> {
         const validatorResult: ParamValidatorResult = validateParams(providedParams, expectedParams);
 
-        if (validatorResult.error) throw new Error(JSON.stringify(validatorResult.errorMessage));
+        if (validatorResult.error) throw new Error(validatorResult.errorMessage);
         return validatorResult.methodArgs;
     }
 }

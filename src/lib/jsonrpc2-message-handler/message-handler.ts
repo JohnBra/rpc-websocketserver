@@ -1,4 +1,7 @@
 import { Params, Method, MessageHandler, HandlerResult } from '../message-handler';
+import { MethodValidatorResult, validateMethod } from '../method-validator';
+import { ParamValidatorResult, validateParams } from '../param-validator';
+import { NOOP } from '../constants';
 import {
     JSON_RPC_ERRORS,
     JSON_RPC_VERSION,
@@ -7,12 +10,9 @@ import {
     JSONRPC2Error,
     JSONRPC2Id,
 } from './utils';
-import { MethodValidatorResult, validateMethod } from '../method-validator';
-import { ParamValidatorResult, validateParams } from '../param-validator';
-import { NOOP } from '../constants';
 
 class JSONRPC2MessageHandler implements MessageHandler {
-    handle(message: any, methods: Array<Method>): HandlerResult {
+    handle(message: any, methods: Map<string, Method>): HandlerResult {
         const res: HandlerResult = {
             error: true,
             data: {
@@ -81,7 +81,7 @@ class JSONRPC2MessageHandler implements MessageHandler {
                 JSON.stringify(
                     JSONRPC2MessageHandler.buildError(
                         -32600,
-                        `Value of 'jsonrpc' must be exactly "${JSON_RPC_VERSION}"`,
+                        `Value of 'jsonrpc' must be exactly '${JSON_RPC_VERSION}' and of type 'string'`,
                     ),
                 ),
             );
@@ -140,7 +140,7 @@ class JSONRPC2MessageHandler implements MessageHandler {
         return res;
     }
 
-    static validateMethod(methodName: string, registeredMethods: Array<Method>): Method {
+    static validateMethod(methodName: string, registeredMethods: Map<string, Method>): Method {
         const validatorResult: MethodValidatorResult = validateMethod(methodName, registeredMethods);
 
         if (validatorResult.error)
@@ -158,7 +158,7 @@ class JSONRPC2MessageHandler implements MessageHandler {
 
     static buildResponse(error: boolean, id: JSONRPC2Id, data: any | JSONRPC2Error): JSONRPC2Response {
         if (error) return { jsonrpc: JSON_RPC_VERSION, error: data, id };
-        return { jsonrpc: '2.0', result: data, id };
+        return { jsonrpc: JSON_RPC_VERSION, result: data, id };
     }
 
     static buildError(code: number, details?: string | object): JSONRPC2Error {

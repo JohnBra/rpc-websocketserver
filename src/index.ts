@@ -29,7 +29,7 @@ class RPCNamespaceA extends WebSocketServer {
 class RPCNamespaceB extends WebSocketServer {
     constructor(messageHandler: MessageHandler, options: WebSocket.ServerOptions) {
         super(messageHandler, options);
-        console.log('namespace b methods: ', this._namespaceMethods);
+        console.log('namespace b methods: ', this.getMethods());
     }
     @register()
     sum(@param('a') a: number, @param('b') b: string) {
