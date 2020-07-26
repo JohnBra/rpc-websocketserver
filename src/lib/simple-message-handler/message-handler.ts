@@ -20,7 +20,6 @@ class SimpleMessageHandler implements MessageHandler {
             res.error = false;
         } catch (err) {
             res.data = err.message;
-            console.log(err.message);
         }
 
         return res;
