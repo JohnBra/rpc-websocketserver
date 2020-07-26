@@ -18,11 +18,11 @@ export abstract class WebSocketServer {
         return this._namespaceMethods;
     }
 
-    broadcastMessage(data: any): void {
+    broadcastMessage(data: any): void {    // TODO set proper types for data (buffer/string...)
         this.wss.clients.forEach((client) => this._sendMessage(client as WebSocket, data));
     }
 
-    protected _sendMessage(ws: WebSocket, data: any): void {
+    protected _sendMessage(ws: WebSocket, data: any): void {    // TODO set proper types for data (buffer/string...)
         if (ws.readyState === WebSocket.OPEN) ws.send(data);
     }
 
