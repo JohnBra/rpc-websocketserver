@@ -27,12 +27,12 @@ export abstract class WebSocketServer {
     }
 
     protected _onConnection(ws: WebSocket): void {
-        ws.on('message', (message: string) => this._onMessage(ws, message));
+        ws.on('message', async (message: string) => this._onMessage(ws, message));
     }
 
-    protected _onMessage(ws: WebSocket, message: WebSocket.Data): void {
+    protected async _onMessage(ws: WebSocket, message: WebSocket.Data): Promise<void> {
         const handlerResult = this._messageHandler.handle(message, this._namespaceMethods);
-        const res = this._messageHandler.process(handlerResult);
+        const res = await this._messageHandler.process(handlerResult);
         if (res) this._sendMessage(ws, res);
     }
 

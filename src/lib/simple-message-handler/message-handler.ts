@@ -25,11 +25,11 @@ class SimpleMessageHandler implements MessageHandler {
         return res;
     }
 
-    process(handlerResult: HandlerResult): any {
+    async process(handlerResult: HandlerResult): Promise<any> {
         let response;
         if (!handlerResult.error) {
             try {
-                response = handlerResult.func(...handlerResult.args);
+                response = await handlerResult.func(...handlerResult.args);
             } catch (err) {
                 console.log(err);
             }

@@ -38,12 +38,12 @@ class JSONRPC2MessageHandler implements MessageHandler {
         return res;
     }
 
-    process(handlerResult: HandlerResult): any {
+    async process(handlerResult: HandlerResult): Promise<any> {
         const requestId = handlerResult.data.request.hasOwnProperty('id') ? handlerResult.data.request.id : null;
         let jsonRpc2Response;
         if (!handlerResult.error) {
             try {
-                const executionResult = handlerResult.func(...handlerResult.args);
+                const executionResult = await handlerResult.func(...handlerResult.args);
                 // only build response if request wasn't a notification
                 if (requestId)
                     jsonRpc2Response = JSONRPC2MessageHandler.buildResponse(false, requestId, executionResult);

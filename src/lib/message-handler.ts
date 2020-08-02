@@ -17,5 +17,5 @@ export interface HandlerResult {
 
 export interface MessageHandler {
     handle(message: any, methods: Map<string, Method>): HandlerResult;
-    process(handlerResult: HandlerResult): any;
+    process(handlerResult: HandlerResult): any | Promise<any>;
 }
