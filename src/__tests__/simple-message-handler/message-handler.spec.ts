@@ -1,6 +1,6 @@
 import SimpleMessageHandler from '../../lib/message-handling/simple-message-handler';
 import {HandlerResult, Method} from '../../lib/message-handling/messageHandler';
-import { NOOP } from '../../lib/constants';
+import { NOOP } from '../../lib/message-handling/constants';
 
 class MockClass {
     getThrowErrorFunction(): Function {

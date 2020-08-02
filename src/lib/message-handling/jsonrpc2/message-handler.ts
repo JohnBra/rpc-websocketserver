@@ -4,11 +4,11 @@ import {
     MessageHandler,
     MethodValidatorResult,
     ParamValidatorResult,
-    HandlerResult
+    HandlerResult,
 } from '../interfaces';
 import { validateMethod } from '../method-validator';
 import { validateParams } from '../param-validator';
-import { NOOP } from '../../constants';
+import { NOOP } from '../constants';
 import {
     JSON_RPC_ERRORS,
     JSON_RPC_VERSION,

@@ -8,7 +8,7 @@ import {
 } from './interfaces';
 import { validateMethod } from './method-validator';
 import { validateParams } from './param-validator';
-import { NOOP } from '../constants';
+import { NOOP } from './constants';
 
 class SimpleMessageHandler implements MessageHandler {
     handle(message: string, methods: Map<string, Method>): HandlerResult {

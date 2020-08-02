@@ -1,6 +1,6 @@
 import { validateMethod, MethodValidatorResult } from '../lib/message-handling/method-validator';
 import { Method } from '../lib/message-handling/messageHandler';
-import { EMPTY_METHOD } from '../lib/constants';
+import { EMPTY_METHOD } from '../lib/message-handling/constants';
 
 describe('Method validator utility', () => {
     const registeredMethodA = { namespace: 'MockNamespace', name: 'mockMethodA', params: {}, func: () => {} };

@@ -1,5 +1,5 @@
 import { Method, MethodValidatorResult } from './interfaces';
-import { EMPTY_METHOD } from '../constants';
+import { EMPTY_METHOD } from './constants';
 
 export function validateMethod(methodName: string, registeredMethods: Map<string, Method>): MethodValidatorResult {
     const method = registeredMethods.get(methodName);
