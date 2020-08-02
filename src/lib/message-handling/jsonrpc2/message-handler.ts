@@ -41,7 +41,8 @@ class JSONRPC2MessageHandler implements MessageHandler {
             res.error = false;
         } catch (err) {
             // set json rpc 2 error as data
-            res.data.errorDetails = err.object();
+            console.log(err);
+            res.data.errorDetails = err?.object;
         }
         return res;
     }
@@ -76,7 +77,7 @@ class JSONRPC2MessageHandler implements MessageHandler {
         try {
             return JSON.parse(message);
         } catch (err) {
-            throw new ParseError();
+            throw new ParseError(err.message);
         }
     }
 

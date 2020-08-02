@@ -10,7 +10,7 @@ describe('Params validator utility', () => {
     const expectedMethodArgs: Array<any> = ['abc', 1];
 
     test('validateParams() should return ParamValidatorResult ' +
-        'with method args array if correct object', () => {
+        'with method args array if correct jsonRpc2ErrorObject', () => {
         const providedParamsObject = { 'a': 'abc', 'b': 1 };
 
         const paramValidatorResult: ParamValidatorResult = validateParams(providedParamsObject, expectedParams);
@@ -21,7 +21,7 @@ describe('Params validator utility', () => {
     });
 
     test('validateParams() should return ParamValidatorResult ' +
-        'method args in correct order in any provided constellation provided in object', () => {
+        'method args in correct order in any provided constellation provided in jsonRpc2ErrorObject', () => {
         const providedParamsObjectA = { 'b': 1, 'a': 'abc' };
         const providedParamsObjectB = { 'a': 'abc', 'b': 1 };
 
@@ -48,7 +48,7 @@ describe('Params validator utility', () => {
     });
 
     test('validateParams() should return ParamValidatorResult with error' +
-        ' if params are not of type object or array', () => {
+        ' if params are not of type jsonRpc2ErrorObject or array', () => {
         const providedParams = 0;
 
         const paramValidatorResult: ParamValidatorResult = validateParams(providedParams as unknown as object, expectedParams);
@@ -59,7 +59,7 @@ describe('Params validator utility', () => {
     });
 
     test('validateParams() should return ParamValidatorResult with error' +
-        ' if count of params in object is incorrect', () => {
+        ' if count of params in jsonRpc2ErrorObject is incorrect', () => {
         const providedParamsObject = { 'b': 1, 'a': 'abc', 'c': true };
         const providedParamsObjectKeys = Object.keys(providedParamsObject);
 
@@ -82,7 +82,7 @@ describe('Params validator utility', () => {
     });
 
     test('validateParams() should return ParamValidatorResult with error' +
-        ' if param is missing from params object', () => {
+        ' if param is missing from params jsonRpc2ErrorObject', () => {
         const providedParamsObject = { 'b': 1, 'c': true };
 
         const paramValidatorResult: ParamValidatorResult = validateParams(providedParamsObject, expectedParams);
