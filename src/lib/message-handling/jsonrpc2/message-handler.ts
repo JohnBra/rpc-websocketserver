@@ -87,7 +87,7 @@ class JSONRPC2MessageHandler implements MessageHandler {
         if (request?.jsonrpc !== JSON_RPC_VERSION)
             throw new InvalidRequest(`Value of 'jsonrpc' must be exactly '${JSON_RPC_VERSION}' and of type 'string'`);
         if (typeof request?.method !== 'string') {
-            throw new InvalidRequest(`Value of 'method' must be of type 'string'`);
+            throw new InvalidRequest(`Value of 'method' must be of type 'string' and can not be omitted`);
         }
         if (request.hasOwnProperty('params')) {
             paramsOmitted = false;
@@ -98,7 +98,7 @@ class JSONRPC2MessageHandler implements MessageHandler {
         if (request.hasOwnProperty('id')) {
             isNotification = false;
             if (typeof request.id !== 'string' && typeof request.id !== 'number' && request.id !== null) {
-                throw new InvalidRequest(`Value of 'id' must be of type 'string', 'number', or of value 'null'`);
+                throw new InvalidRequest(`Value of 'id' should be of type 'string' or 'number'`);
             }
         }
 
