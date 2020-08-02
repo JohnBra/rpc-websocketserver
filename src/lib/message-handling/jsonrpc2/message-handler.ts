@@ -47,18 +47,20 @@ class JSONRPC2MessageHandler implements MessageHandler {
     }
 
     async process(handlerResult: HandlerResult): Promise<any> {
-        const requestId = handlerResult.data.request.hasOwnProperty('id') ? handlerResult.data.request.id : null;
+        const isNotification = !handlerResult.data.request.hasOwnProperty('id');
+        const requestId = handlerResult.data.request.id ?? null;
+
         let jsonRpc2Response;
         if (!handlerResult.error) {
             try {
                 const executionResult = await handlerResult.func(...handlerResult.args);
                 // only build response if request wasn't a notification
-                if (requestId)
+                if (!isNotification)
                     jsonRpc2Response = JSONRPC2MessageHandler.buildResponse(false, requestId, executionResult);
             } catch (err) {
                 // catch internal server error on name execution failure + build proper json rpc 2 response
                 const jsonRpc2Error = JSON.stringify(JSONRPC2MessageHandler.buildError(-32603));
-                return JSONRPC2MessageHandler.buildResponse(true, requestId, jsonRpc2Error);
+                jsonRpc2Response = JSONRPC2MessageHandler.buildResponse(true, requestId, jsonRpc2Error);
             }
         } else {
             jsonRpc2Response = JSONRPC2MessageHandler.buildResponse(true, requestId, handlerResult.data.errorDetails);
@@ -69,6 +71,7 @@ class JSONRPC2MessageHandler implements MessageHandler {
         return jsonRpc2Response;
     }
 
+    // TODO accept string, Buffer, ArrayBuffer, Buffer[]
     static parse(message: string): JSONRPC2Request {
         try {
             return JSON.parse(message);
@@ -78,17 +81,12 @@ class JSONRPC2MessageHandler implements MessageHandler {
     }
 
     static validateRequest(request: JSONRPC2Request): JSONRPC2Request {
-        const missingProperties: Array<string> = [];
         let paramsOmitted = true;
         let isNotification = true;
 
-        if (!request.hasOwnProperty('jsonrpc')) {
-            missingProperties.push('jsonrpc');
-        } else if (request.jsonrpc !== JSON_RPC_VERSION)
+        if (request?.jsonrpc !== JSON_RPC_VERSION)
             throw new InvalidRequest(`Value of 'jsonrpc' must be exactly '${JSON_RPC_VERSION}' and of type 'string'`);
-        if (!request.hasOwnProperty('method')) {
-            missingProperties.push('method');
-        } else if (typeof request.method !== 'string') {
+        if (typeof request?.method !== 'string') {
             throw new InvalidRequest(`Value of 'method' must be of type 'string'`);
         }
         if (request.hasOwnProperty('params')) {
@@ -103,9 +101,6 @@ class JSONRPC2MessageHandler implements MessageHandler {
                 throw new InvalidRequest(`Value of 'id' must be of type 'string', 'number', or of value 'null'`);
             }
         }
-
-        if (missingProperties.length)
-            throw new InvalidRequest(`Missing properties in request object: ${missingProperties.join(', ')}`);
 
         const res: JSONRPC2Request = {
             jsonrpc: request.jsonrpc,
