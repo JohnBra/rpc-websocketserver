@@ -17,6 +17,7 @@ module.exports = {
         "@typescript-eslint/ban-types": "off",
         "@typescript-eslint/lines-between-class-members": "off",
         "@typescript-eslint/dot-notation": "off",
+        "max-classes-per-file": "off",
         "import/prefer-default-export": "off",
         "no-prototype-builtins": "off",
         "no-underscore-dangle": "off",

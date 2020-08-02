@@ -9,15 +9,9 @@ import {
 import { validateMethod } from '../method-validator';
 import { validateParams } from '../param-validator';
 import { NOOP } from '../constants';
-import {
-    JSON_RPC_ERRORS,
-    JSON_RPC_VERSION,
-    JSONRPC2Request,
-    JSONRPC2Response,
-    JSONRPC2Error,
-    JSONRPC2Id,
-} from './interfaces';
-import { InvalidMethod, InvalidParams, InvalidRequest, ParseError } from './errors';
+import { buildError, buildResponse, assertValidRequest } from './utils';
+import { JSONRPC2Request } from './interfaces';
+import { InvalidMethod, InvalidParams, ParseError } from './errors';
 
 class JSONRPC2MessageHandler implements MessageHandler {
     handle(message: string, methods: Map<string, Method>): HandlerResult {
@@ -41,7 +35,6 @@ class JSONRPC2MessageHandler implements MessageHandler {
             res.error = false;
         } catch (err) {
             // set json rpc 2 error as data
-            console.log(err);
             res.data.errorDetails = err?.object;
         }
         return res;
@@ -56,15 +49,13 @@ class JSONRPC2MessageHandler implements MessageHandler {
             try {
                 const executionResult = await handlerResult.func(...handlerResult.args);
                 // only build response if request wasn't a notification
-                if (!isNotification)
-                    jsonRpc2Response = JSONRPC2MessageHandler.buildResponse(false, requestId, executionResult);
+                if (!isNotification) jsonRpc2Response = buildResponse(false, requestId, executionResult);
             } catch (err) {
-                // catch internal server error on name execution failure + build proper json rpc 2 response
-                const jsonRpc2Error = JSON.stringify(JSONRPC2MessageHandler.buildError(-32603));
-                jsonRpc2Response = JSONRPC2MessageHandler.buildResponse(true, requestId, jsonRpc2Error);
+                // catch internal server error on execution failure + build json rpc 2 response
+                jsonRpc2Response = buildResponse(true, requestId, buildError(-32603));
             }
         } else {
-            jsonRpc2Response = JSONRPC2MessageHandler.buildResponse(true, requestId, handlerResult.data.errorDetails);
+            jsonRpc2Response = buildResponse(true, requestId, handlerResult.data.errorDetails);
         }
 
         if (jsonRpc2Response) jsonRpc2Response = JSON.stringify(jsonRpc2Response);
@@ -82,26 +73,10 @@ class JSONRPC2MessageHandler implements MessageHandler {
     }
 
     static validateRequest(request: JSONRPC2Request): JSONRPC2Request {
-        let paramsOmitted = true;
-        let isNotification = true;
+        assertValidRequest(request);
 
-        if (request?.jsonrpc !== JSON_RPC_VERSION)
-            throw new InvalidRequest(`Value of 'jsonrpc' must be exactly '${JSON_RPC_VERSION}' and of type 'string'`);
-        if (typeof request?.method !== 'string') {
-            throw new InvalidRequest(`Value of 'method' must be of type 'string' and can not be omitted`);
-        }
-        if (request.hasOwnProperty('params')) {
-            paramsOmitted = false;
-            if (!Array.isArray(request.params) && typeof request.params !== 'object') {
-                throw new InvalidRequest(`Value of 'params' must be of type 'array' or 'object'`);
-            }
-        }
-        if (request.hasOwnProperty('id')) {
-            isNotification = false;
-            if (typeof request.id !== 'string' && typeof request.id !== 'number' && request.id !== null) {
-                throw new InvalidRequest(`Value of 'id' should be of type 'string' or 'number'`);
-            }
-        }
+        const paramsOmitted = !request.hasOwnProperty('params');
+        const isNotification = !request.hasOwnProperty('id');
 
         const res: JSONRPC2Request = {
             jsonrpc: request.jsonrpc,
@@ -126,22 +101,6 @@ class JSONRPC2MessageHandler implements MessageHandler {
 
         if (validatorResult.error) throw new InvalidParams(validatorResult.errorMessage);
         return validatorResult.methodArgs;
-    }
-
-    static buildResponse(error: boolean, id: JSONRPC2Id, data: any | JSONRPC2Error): JSONRPC2Response {
-        if (error) return { jsonrpc: JSON_RPC_VERSION, error: data, id };
-        return { jsonrpc: JSON_RPC_VERSION, result: data, id };
-    }
-
-    static buildError(code: number, details?: string | object): JSONRPC2Error {
-        const error: JSONRPC2Error = {
-            code,
-            message: JSON_RPC_ERRORS.get(code) || 'Internal error',
-        };
-
-        if (details) error.data = details;
-
-        return error;
     }
 }
 
