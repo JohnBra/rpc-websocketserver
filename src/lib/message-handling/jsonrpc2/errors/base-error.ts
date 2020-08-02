@@ -1,4 +1,4 @@
-import { JSONRPC2Error, JSONRPC2ErrorDetails } from '../utils';
+import { JSONRPC2Error, JSONRPC2ErrorDetails } from '../interfaces';
 
 export abstract class JSONRPC2BaseError extends Error {
     readonly code: number;
@@ -12,7 +12,7 @@ export abstract class JSONRPC2BaseError extends Error {
         this.details = details;
     }
 
-    getObject(): JSONRPC2Error {
+    get object(): JSONRPC2Error {
         const jsonRpc2Error: JSONRPC2Error = { code: this.code, message: this.message };
         if (this.details) jsonRpc2Error.data = this.details;
         return jsonRpc2Error;

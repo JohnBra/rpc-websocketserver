@@ -16,7 +16,8 @@ import {
     JSONRPC2Response,
     JSONRPC2Error,
     JSONRPC2Id,
-} from './utils';
+} from './interfaces';
+import { InvalidMethod, InvalidParams, InvalidRequest, ParseError } from './errors';
 
 class JSONRPC2MessageHandler implements MessageHandler {
     handle(message: string, methods: Map<string, Method>): HandlerResult {
@@ -40,7 +41,7 @@ class JSONRPC2MessageHandler implements MessageHandler {
             res.error = false;
         } catch (err) {
             // set json rpc 2 error as data
-            res.data.errorDetails = JSON.parse(err.message);
+            res.data.errorDetails = err.object();
         }
         return res;
     }
@@ -72,7 +73,7 @@ class JSONRPC2MessageHandler implements MessageHandler {
         try {
             return JSON.parse(message);
         } catch (err) {
-            throw new Error(JSON.stringify(JSONRPC2MessageHandler.buildError(-32700)));
+            throw new ParseError();
         }
     }
 
@@ -84,57 +85,27 @@ class JSONRPC2MessageHandler implements MessageHandler {
         if (!request.hasOwnProperty('jsonrpc')) {
             missingProperties.push('jsonrpc');
         } else if (request.jsonrpc !== JSON_RPC_VERSION)
-            throw new Error(
-                JSON.stringify(
-                    JSONRPC2MessageHandler.buildError(
-                        -32600,
-                        `Value of 'jsonrpc' must be exactly '${JSON_RPC_VERSION}' and of type 'string'`,
-                    ),
-                ),
-            );
+            throw new InvalidRequest(`Value of 'jsonrpc' must be exactly '${JSON_RPC_VERSION}' and of type 'string'`);
         if (!request.hasOwnProperty('method')) {
             missingProperties.push('method');
         } else if (typeof request.method !== 'string') {
-            throw new Error(
-                JSON.stringify(JSONRPC2MessageHandler.buildError(-32600, `Value of 'method' must be of type 'string'`)),
-            );
+            throw new InvalidRequest(`Value of 'method' must be of type 'string'`);
         }
         if (request.hasOwnProperty('params')) {
             paramsOmitted = false;
             if (!Array.isArray(request.params) && typeof request.params !== 'object') {
-                throw new Error(
-                    JSON.stringify(
-                        JSONRPC2MessageHandler.buildError(
-                            -32600,
-                            `Value of 'params' must be of type 'array' or 'object'`,
-                        ),
-                    ),
-                );
+                throw new InvalidRequest(`Value of 'params' must be of type 'array' or 'object'`);
             }
         }
         if (request.hasOwnProperty('id')) {
             isNotification = false;
             if (typeof request.id !== 'string' && typeof request.id !== 'number' && request.id !== null) {
-                throw new Error(
-                    JSON.stringify(
-                        JSONRPC2MessageHandler.buildError(
-                            -32600,
-                            `Value of 'id' must be of type 'string', 'number', or of value 'null'`,
-                        ),
-                    ),
-                );
+                throw new InvalidRequest(`Value of 'id' must be of type 'string', 'number', or of value 'null'`);
             }
         }
 
         if (missingProperties.length)
-            throw new Error(
-                JSON.stringify(
-                    JSONRPC2MessageHandler.buildError(
-                        -32600,
-                        `Missing properties in request object: ${missingProperties.join(', ')}`,
-                    ),
-                ),
-            );
+            throw new InvalidRequest(`Missing properties in request object: ${missingProperties.join(', ')}`);
 
         const res: JSONRPC2Request = {
             jsonrpc: request.jsonrpc,
@@ -150,16 +121,14 @@ class JSONRPC2MessageHandler implements MessageHandler {
     static validateMethod(methodName: string, registeredMethods: Map<string, Method>): Method {
         const validatorResult: MethodValidatorResult = validateMethod(methodName, registeredMethods);
 
-        if (validatorResult.error)
-            throw new Error(JSON.stringify(JSONRPC2MessageHandler.buildError(-32601, validatorResult.errorMessage)));
+        if (validatorResult.error) throw new InvalidMethod(validatorResult.errorMessage);
         return validatorResult.method;
     }
 
     static validateParams(providedParams: object | Array<any>, expectedParams: Params): Array<any> {
         const validatorResult: ParamValidatorResult = validateParams(providedParams, expectedParams);
 
-        if (validatorResult.error)
-            throw new Error(JSON.stringify(JSONRPC2MessageHandler.buildError(-32602, validatorResult.errorMessage)));
+        if (validatorResult.error) throw new InvalidParams(validatorResult.errorMessage);
         return validatorResult.methodArgs;
     }
 

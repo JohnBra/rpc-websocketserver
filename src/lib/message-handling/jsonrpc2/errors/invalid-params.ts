@@ -1,5 +1,5 @@
 import { JSONRPC2BaseError } from './base-error';
-import { JSONRPC2ErrorDetails } from '../utils';
+import { JSONRPC2ErrorDetails } from '../interfaces';
 
 export class InvalidParams extends JSONRPC2BaseError {
     constructor(details?: JSONRPC2ErrorDetails) {
