@@ -14,15 +14,17 @@ export abstract class WebSocketServer {
         this._messageHandler = messageHandler;
     }
 
-    getMethods (): Map<string, Method> {
+    getMethods(): Map<string, Method> {
         return this._namespaceMethods;
     }
 
-    broadcastMessage(data: any): void {    // TODO set proper types for data (buffer/string...)
+    broadcastMessage(data: any): void {
+        // TODO set proper types for data (buffer/string...)
         this.wss.clients.forEach((client) => this._sendMessage(client as WebSocket, data));
     }
 
-    protected _sendMessage(ws: WebSocket, data: any): void {    // TODO set proper types for data (buffer/string...)
+    protected _sendMessage(ws: WebSocket, data: any): void {
+        // TODO set proper types for data (buffer/string...)
         if (ws.readyState === WebSocket.OPEN) ws.send(data);
     }
 
