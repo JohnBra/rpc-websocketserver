@@ -3,10 +3,7 @@ import { JSONRPC2ErrorDetails } from '../utils';
 
 export class InternalError extends JSONRPC2BaseError {
     constructor(details?: JSONRPC2ErrorDetails) {
-        super();
+        super(-32603, 'Internal error', details);
         this.name = 'InternalError';
-        this.code = -32603;
-        this.message = 'Internal error';
-        this.details = details;
     }
 }

@@ -1,15 +1,14 @@
 import { JSONRPC2Error, JSONRPC2ErrorDetails } from '../utils';
 
 export abstract class JSONRPC2BaseError extends Error {
-    public code: number;
-    public message: string;
-    public details: JSONRPC2ErrorDetails | undefined;
+    readonly code: number;
+    readonly message: string;
+    readonly details: JSONRPC2ErrorDetails | undefined;
 
-    protected constructor(details?: JSONRPC2ErrorDetails) {
+    protected constructor(code: number, message: string, details?: JSONRPC2ErrorDetails) {
         super();
-        this.name = 'BaseError';
-        this.code = -32099;
-        this.message = '';
+        this.code = code;
+        this.message = message;
         this.details = details;
     }
 

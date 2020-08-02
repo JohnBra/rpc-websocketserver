@@ -3,10 +3,7 @@ import { JSONRPC2ErrorDetails } from '../utils';
 
 export class ParseError extends JSONRPC2BaseError {
     constructor(details?: JSONRPC2ErrorDetails) {
-        super();
+        super(-32700, 'Parse error', details);
         this.name = 'ParseError';
-        this.code = -32700;
-        this.message = 'Parse error';
-        this.details = details;
     }
 }

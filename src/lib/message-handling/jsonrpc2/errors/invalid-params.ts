@@ -3,10 +3,7 @@ import { JSONRPC2ErrorDetails } from '../utils';
 
 export class InvalidParams extends JSONRPC2BaseError {
     constructor(details?: JSONRPC2ErrorDetails) {
-        super();
+        super(-32602, 'Invalid params', details);
         this.name = 'InvalidParams';
-        this.code = -32602;
-        this.message = 'Invalid params';
-        this.details = details;
     }
 }

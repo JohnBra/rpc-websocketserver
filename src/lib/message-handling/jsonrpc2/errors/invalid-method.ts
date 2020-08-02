@@ -3,10 +3,7 @@ import { JSONRPC2ErrorDetails } from '../utils';
 
 export class InvalidMethod extends JSONRPC2BaseError {
     constructor(details?: JSONRPC2ErrorDetails) {
-        super();
+        super(-32601, 'Method not found', details);
         this.name = 'InvalidMethod';
-        this.code = -32601;
-        this.message = 'Method not found';
-        this.details = details;
     }
 }

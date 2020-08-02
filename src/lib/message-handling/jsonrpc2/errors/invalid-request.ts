@@ -3,10 +3,7 @@ import { JSONRPC2ErrorDetails } from '../utils';
 
 export class InvalidRequest extends JSONRPC2BaseError {
     constructor(details?: JSONRPC2ErrorDetails) {
-        super();
+        super(-32600, 'Invalid Request', details);
         this.name = 'InvalidRequest';
-        this.code = -32600;
-        this.message = 'Invalid Request';
-        this.details = details;
     }
 }
