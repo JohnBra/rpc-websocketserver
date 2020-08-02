@@ -2,10 +2,10 @@ import * as WebSocket from 'ws';
 import { MessageHandler, Method } from './message-handler';
 
 export abstract class WebSocketServer {
+    public wss: WebSocket.Server;
     protected static methods: Set<Method> = new Set();
     protected readonly _namespaceMethods: Map<string, Method>;
     protected _messageHandler: MessageHandler;
-    public wss: WebSocket.Server;
 
     protected constructor(messageHandler: MessageHandler, options: WebSocket.ServerOptions) {
         this.wss = new WebSocket.Server(options);
