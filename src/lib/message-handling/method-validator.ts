@@ -1,11 +1,5 @@
-import { Method } from './message-handler';
-import { EMPTY_METHOD } from './constants';
-
-export interface MethodValidatorResult {
-    error: boolean;
-    errorMessage: string;
-    method: Method;
-}
+import { Method, MethodValidatorResult } from './interfaces';
+import { EMPTY_METHOD } from '../constants';
 
 export function validateMethod(methodName: string, registeredMethods: Map<string, Method>): MethodValidatorResult {
     const method = registeredMethods.get(methodName);

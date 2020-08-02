@@ -1,5 +1,5 @@
-import { validateParams, ParamValidatorResult } from '../lib/param-validator';
-import { Params } from '../lib/message-handler';
+import { validateParams, ParamValidatorResult } from '../lib/message-handling/param-validator';
+import { Params } from '../lib/message-handling/messageHandler';
 
 describe('Params validator utility', () => {
     const expectedParams: Params = {

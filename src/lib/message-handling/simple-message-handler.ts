@@ -1,6 +1,13 @@
-import { HandlerResult, MessageHandler, Method, Params } from '../message-handler';
-import { MethodValidatorResult, validateMethod } from '../method-validator';
-import { ParamValidatorResult, validateParams } from '../param-validator';
+import {
+    HandlerResult,
+    MessageHandler,
+    Method,
+    Params,
+    MethodValidatorResult,
+    ParamValidatorResult,
+} from './interfaces';
+import { validateMethod } from './method-validator';
+import { validateParams } from './param-validator';
 import { NOOP } from '../constants';
 
 class SimpleMessageHandler implements MessageHandler {

@@ -34,8 +34,10 @@ export interface JSONRPC2Request {
     id?: JSONRPC2Id; // if omitted -> request is notification
 }
 
+export type JSONRPC2ErrorDetails = object | string | Array<any>;
+
 export interface JSONRPC2Error {
     code: number;
     message: string;
-    data?: string | object;
+    data?: JSONRPC2ErrorDetails;
 }

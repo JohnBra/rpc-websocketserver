@@ -1,4 +1,4 @@
-import { Method, Params } from './message-handler';
+import { Method, Params } from './message-handling/interfaces';
 
 /* istanbul ignore next */
 export const NOOP = (): void => {};

@@ -1,12 +1,12 @@
 import * as WebSocket from 'ws';
 import { WebSocketServer } from '../lib/websocket-server';
-import { MessageHandler } from '../lib/message-handler';
-import SimpleMessageHandler from '../lib/simple-message-handler/message-handler';
+import { Interfaces } from '../lib/message-handling/messageHandler';
+import SimpleMessageHandler from '../lib/message-handling/simple-message-handler';
 
 
 
 class MockNamespace extends WebSocketServer {
-    constructor(messageHandler: MessageHandler, options: WebSocket.ServerOptions) {
+    constructor(messageHandler: Interfaces, options: WebSocket.ServerOptions) {
         super(messageHandler, options);
     }
 }

@@ -7,15 +7,15 @@ import url from 'url';
 import * as WebSocket from 'ws';
 import { register, param } from './lib/decorators';
 import { WebSocketServer } from './lib/websocket-server';
-import JSONRPC2MessageHandler from './lib/jsonrpc2-message-handler/message-handler';
-import SimpleMessageHandler from './lib/simple-message-handler/message-handler';
-import { MessageHandler } from './lib/message-handler';
+import JSONRPC2MessageHandler from './lib/message-handling/jsonrpc2/message-handler';
+import SimpleMessageHandler from './lib/message-handling/simple-message-handler';
+import { Interfaces } from './lib/message-handling/messageHandler';
 
 const app = express();
 const server = http.createServer(app);
 
 class RPCNamespaceA extends WebSocketServer {
-    constructor(messageHandler: MessageHandler, options: WebSocket.ServerOptions) {
+    constructor(messageHandler: Interfaces, options: WebSocket.ServerOptions) {
         super(messageHandler, options);
         console.log('namespace a methods: ', this._namespaceMethods);
     }
@@ -27,7 +27,7 @@ class RPCNamespaceA extends WebSocketServer {
 }
 
 class RPCNamespaceB extends WebSocketServer {
-    constructor(messageHandler: MessageHandler, options: WebSocket.ServerOptions) {
+    constructor(messageHandler: Interfaces, options: WebSocket.ServerOptions) {
         super(messageHandler, options);
         console.log('namespace b methods: ', this.getMethods());
     }

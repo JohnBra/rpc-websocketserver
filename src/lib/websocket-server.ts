@@ -1,5 +1,5 @@
 import * as WebSocket from 'ws';
-import { MessageHandler, Method } from './message-handler';
+import { MessageHandler, Method } from './message-handling/interfaces';
 
 export abstract class WebSocketServer {
     public wss: WebSocket.Server;

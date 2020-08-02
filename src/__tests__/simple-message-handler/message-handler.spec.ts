@@ -1,5 +1,5 @@
-import SimpleMessageHandler from '../../lib/simple-message-handler/message-handler';
-import {HandlerResult, Method} from '../../lib/message-handler';
+import SimpleMessageHandler from '../../lib/message-handling/simple-message-handler';
+import {HandlerResult, Method} from '../../lib/message-handling/messageHandler';
 import { NOOP } from '../../lib/constants';
 
 class MockClass {

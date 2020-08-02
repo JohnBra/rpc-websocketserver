@@ -1,10 +1,4 @@
-import { Params } from './message-handler';
-
-export interface ParamValidatorResult {
-    error: boolean;
-    errorMessage: string;
-    methodArgs: Array<any>;
-}
+import { Params, ParamValidatorResult } from './interfaces';
 
 export function validateParams(providedParams: Params | Array<any>, expectedParams: Params): ParamValidatorResult {
     const res: ParamValidatorResult = { error: true, errorMessage: '', methodArgs: [] };

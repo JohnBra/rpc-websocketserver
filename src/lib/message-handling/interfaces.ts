@@ -8,6 +8,18 @@ export interface Method {
     func: Function;
 }
 
+export interface ParamValidatorResult {
+    error: boolean;
+    errorMessage: string;
+    methodArgs: Array<any>;
+}
+
+export interface MethodValidatorResult {
+    error: boolean;
+    errorMessage: string;
+    method: Method;
+}
+
 export interface HandlerResult {
     error: boolean;
     data: any;

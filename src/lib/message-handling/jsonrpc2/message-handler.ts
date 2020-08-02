@@ -1,7 +1,14 @@
-import { Params, Method, MessageHandler, HandlerResult } from '../message-handler';
-import { MethodValidatorResult, validateMethod } from '../method-validator';
-import { ParamValidatorResult, validateParams } from '../param-validator';
-import { NOOP } from '../constants';
+import {
+    Params,
+    Method,
+    MessageHandler,
+    MethodValidatorResult,
+    ParamValidatorResult,
+    HandlerResult
+} from '../interfaces';
+import { validateMethod } from '../method-validator';
+import { validateParams } from '../param-validator';
+import { NOOP } from '../../constants';
 import {
     JSON_RPC_ERRORS,
     JSON_RPC_VERSION,
