@@ -1,5 +1,5 @@
 import { HandlerResult, MessageHandler, Method } from '../interfaces';
-import {assertValidRequest, parseRequest, validateMethod, validateParams} from '../utils';
+import { assertValidRequest, parseRequest, validateMethod, validateParams } from '../utils';
 import { NOOP } from '../constants';
 
 class SimpleMessageHandler implements MessageHandler {
