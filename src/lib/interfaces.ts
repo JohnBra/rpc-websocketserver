@@ -4,6 +4,15 @@
  */
 export type Params = Record<string, any>;
 
+export type MethodArgs = Array<any>;
+
+export type BatchRequest = Request[];
+
+export interface Request {
+    method: string;
+    params?: Params | MethodArgs;
+}
+
 export interface Method {
     namespace: string;
     name: string;
@@ -11,23 +20,11 @@ export interface Method {
     func: Function;
 }
 
-export interface ParamValidatorResult {
-    error: boolean;
-    errorMessage: string;
-    methodArgs: Array<any>;
-}
-
-export interface MethodValidatorResult {
-    error: boolean;
-    errorMessage: string;
-    method: Method;
-}
-
 export interface HandlerResult {
     error: boolean;
     data: any;
     func: Function;
-    args: Array<any>;
+    args: MethodArgs;
 }
 
 export interface MessageHandler {

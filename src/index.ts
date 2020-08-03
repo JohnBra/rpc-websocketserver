@@ -7,9 +7,9 @@ import url from 'url';
 import * as WebSocket from 'ws';
 import { register, param } from './lib/decorators';
 import { WebSocketServer } from './lib/websocket-server';
-import JSONRPC2MessageHandler from './lib/message-handling/jsonrpc2/message-handler';
-import SimpleMessageHandler from './lib/message-handling/simple-message-handler';
-import { MessageHandler } from './lib/message-handling/interfaces';
+import JSONRPC2MessageHandler from './lib/message-handlers/json-rpc-2';
+import SimpleMessageHandler from './lib/message-handlers/simple';
+import { MessageHandler } from './lib/interfaces';
 
 const app = express();
 const server = http.createServer(app);
@@ -38,7 +38,7 @@ class RPCNamespaceB extends WebSocketServer {
     }
 }
 
-const a = new RPCNamespaceA(new SimpleMessageHandler(), { noServer: true });
+const a = new RPCNamespaceA(new Simple(), { noServer: true });
 const b = new RPCNamespaceB(new JSONRPC2MessageHandler(), { noServer: true });
 
 server.on('upgrade', function upgrade(request, socket, head) {

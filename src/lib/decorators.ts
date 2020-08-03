@@ -1,5 +1,5 @@
 import 'reflect-metadata';
-import { Method, Params } from './message-handling/interfaces';
+import { Method, Params } from './interfaces';
 
 const PARAMETER_NAME_KEY = Symbol('parameterName');
 

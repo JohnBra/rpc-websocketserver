@@ -1,6 +1,6 @@
-import SimpleMessageHandler from '../../lib/message-handling/simple-message-handler';
+import Simple from '../../lib/message-handlers/simple-message-handler';
 import {HandlerResult, Method} from '../../lib/message-handling/messageHandler';
-import { NOOP } from '../../lib/message-handling/constants';
+import { NOOP } from '../../lib/constants';
 
 class MockClass {
     getThrowErrorFunction(): Function {
@@ -40,7 +40,7 @@ describe('SimpleMessageHandler class', () => {
     test('constructor call without parameters does not throw error', () => {
 
         function instantiateSimpleMessageHandler() {
-            new SimpleMessageHandler();
+            new Simple();
         }
 
         expect(instantiateSimpleMessageHandler).not.toThrow();
@@ -49,7 +49,7 @@ describe('SimpleMessageHandler class', () => {
 
     test('handle() returns HandlerResult with error -> false, ' +
         'data -> undefined and function as well as args assigned with correct input', () => {
-        const simpleMessageHandler = new SimpleMessageHandler();
+        const simpleMessageHandler = new Simple();
         const correctMessage = JSON.stringify({method: 'mockMethodA', params: {b: 1, a: 'abc'}});
 
         const handlerResult: HandlerResult = simpleMessageHandler.handle(correctMessage, registeredMethods);
@@ -62,7 +62,7 @@ describe('SimpleMessageHandler class', () => {
 
     test('handle() returns HandlerResult with error -> true, data -> error message ' +
         'and function assigned with noop as well as args -> empty array on incorrect JSON', () => {
-        const simpleMessageHandler = new SimpleMessageHandler();
+        const simpleMessageHandler = new Simple();
         const incorrectMessage = "{";
 
         function callHandleWithIncorrectJSON() {
@@ -80,7 +80,7 @@ describe('SimpleMessageHandler class', () => {
 
     test('handle() returns HandlerResult with error -> true, data -> error message ' +
         'and function assigned with noop as well as args -> empty array on unknown method', () => {
-        const simpleMessageHandler = new SimpleMessageHandler();
+        const simpleMessageHandler = new Simple();
         const incorrectMessage = JSON.stringify({method: 'unknownMethodA', params: {b: 1, a: 'abc'}});
 
         function callHandleWithIncorrectMethod() {
@@ -98,7 +98,7 @@ describe('SimpleMessageHandler class', () => {
 
     test('handle() returns HandlerResult with error -> true, data -> error message ' +
         'and function assigned with noop as well as args -> empty array on incorrect params', () => {
-        const simpleMessageHandler = new SimpleMessageHandler();
+        const simpleMessageHandler = new Simple();
         const incorrectMessage = JSON.stringify({method: 'mockMethodA', params: {b: 1, c: 'abc'}});
 
         function callHandleWithIncorrectParams() {
@@ -116,7 +116,7 @@ describe('SimpleMessageHandler class', () => {
 
     test('process() should call function with provided func and args if error is false' +
         ' as well as return function result', () => {
-        const simpleMessageHandler = new SimpleMessageHandler();
+        const simpleMessageHandler = new Simple();
         const mockClass = new MockClass();
         const spyMockSum = jest.spyOn(MockClass.prototype, 'mockSum');
         const handlerResult: HandlerResult = {
@@ -134,7 +134,7 @@ describe('SimpleMessageHandler class', () => {
     });
 
     test('process() should return handler result data if error is true', () => {
-        const simpleMessageHandler = new SimpleMessageHandler();
+        const simpleMessageHandler = new Simple();
         const handlerResult: HandlerResult = { error: true, data: 'some error message', args: [], func: NOOP };
 
         const res = simpleMessageHandler.process(handlerResult);
@@ -143,7 +143,7 @@ describe('SimpleMessageHandler class', () => {
     });
 
     test('process() should console log error if called function throws', () => {
-        const simpleMessageHandler = new SimpleMessageHandler();
+        const simpleMessageHandler = new Simple();
         const originalLog = console.log;
         console.log = jest.fn();
         const spyLog = jest.spyOn(console, 'log');

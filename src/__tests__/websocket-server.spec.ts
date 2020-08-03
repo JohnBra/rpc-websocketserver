@@ -1,7 +1,7 @@
 import * as WebSocket from 'ws';
 import { WebSocketServer } from '../lib/websocket-server';
 import { Interfaces } from '../lib/message-handling/messageHandler';
-import SimpleMessageHandler from '../lib/message-handling/simple-message-handler';
+import Simple from '../lib/message-handlers/simple-message-handler';
 
 
 
@@ -13,11 +13,11 @@ class MockNamespace extends WebSocketServer {
 
 describe('WebSocketServer abstract class', () => {
     let wssOptions: WebSocket.ServerOptions;
-    let simpleMessageHandler: SimpleMessageHandler;
+    let simpleMessageHandler: Simple;
 
     beforeAll(() => {
         wssOptions = { noServer: true };
-        simpleMessageHandler = new SimpleMessageHandler();
+        simpleMessageHandler = new Simple();
     });
 
     test('instantiates without failure', () => {

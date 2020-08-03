@@ -1,17 +1,9 @@
-import {
-    Params,
-    Method,
-    MessageHandler,
-    MethodValidatorResult,
-    ParamValidatorResult,
-    HandlerResult,
-} from '../interfaces';
-import { validateMethod } from '../method-validator';
-import { validateParams } from '../param-validator';
+import { Params, Method, MessageHandler, HandlerResult } from '../interfaces';
+import { validateMethod, validateParams } from '../utils';
 import { NOOP } from '../constants';
-import { buildError, buildResponse, assertValidRequest } from './utils';
-import { JSONRPC2Request } from './interfaces';
-import { InvalidMethod, InvalidParams, ParseError } from './errors';
+import { assertValidRequest, buildError, buildResponse } from '../jsonrpc2/utils';
+import { Request } from '../jsonrpc2/interfaces';
+import { InvalidMethod, InvalidParams, ParseError } from '../jsonrpc2/errors';
 
 class JSONRPC2MessageHandler implements MessageHandler {
     handle(message: string, methods: Map<string, Method>): HandlerResult {
@@ -64,7 +56,7 @@ class JSONRPC2MessageHandler implements MessageHandler {
     }
 
     // TODO accept string, Buffer, ArrayBuffer, Buffer[]
-    static parse(message: string): JSONRPC2Request {
+    static parse(message: string): Request {
         try {
             return JSON.parse(message);
         } catch (err) {
@@ -72,13 +64,13 @@ class JSONRPC2MessageHandler implements MessageHandler {
         }
     }
 
-    static validateRequest(request: JSONRPC2Request): JSONRPC2Request {
+    static validateRequest(request: object): Request {
         assertValidRequest(request);
 
         const paramsOmitted = !request.hasOwnProperty('params');
         const isNotification = !request.hasOwnProperty('id');
 
-        const res: JSONRPC2Request = {
+        const res: Request = {
             jsonrpc: request.jsonrpc,
             method: request.method,
             params: paramsOmitted ? {} : request.params,
@@ -90,17 +82,11 @@ class JSONRPC2MessageHandler implements MessageHandler {
     }
 
     static validateMethod(methodName: string, registeredMethods: Map<string, Method>): Method {
-        const validatorResult: MethodValidatorResult = validateMethod(methodName, registeredMethods);
-
-        if (validatorResult.error) throw new InvalidMethod(validatorResult.errorMessage);
-        return validatorResult.method;
+        return validateMethod(methodName, registeredMethods, InvalidMethod);
     }
 
     static validateParams(providedParams: object | Array<any>, expectedParams: Params): Array<any> {
-        const validatorResult: ParamValidatorResult = validateParams(providedParams, expectedParams);
-
-        if (validatorResult.error) throw new InvalidParams(validatorResult.errorMessage);
-        return validatorResult.methodArgs;
+        return validateParams(providedParams, expectedParams, InvalidParams);
     }
 }
 
