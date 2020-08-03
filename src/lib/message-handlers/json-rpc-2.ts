@@ -1,8 +1,8 @@
 import { Method, MessageHandler, HandlerResult } from '../interfaces';
 import { parseRequest, validateMethod, validateParams } from '../utils';
 import { NOOP } from '../constants';
-import { assertValidJSONRPC2Request, buildError, buildResponse } from '../jsonrpc2/utils';
-import { InvalidMethod, InvalidParams, InvalidRequest, ParseError } from '../jsonrpc2/errors';
+import { assertValidJSONRPC2Request, buildError, buildResponse } from '../json-rpc-2/utils';
+import { InvalidMethod, InvalidParams, InvalidRequest, ParseError } from '../json-rpc-2/errors';
 
 class JSONRPC2MessageHandler implements MessageHandler {
     handle(message: string, methods: Map<string, Method>): HandlerResult {
