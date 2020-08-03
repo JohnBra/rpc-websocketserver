@@ -38,7 +38,7 @@ class RPCNamespaceB extends WebSocketServer {
     }
 }
 
-const a = new RPCNamespaceA(new Simple(), { noServer: true });
+const a = new RPCNamespaceA(new SimpleMessageHandler(), { noServer: true });
 const b = new RPCNamespaceB(new JSONRPC2MessageHandler(), { noServer: true });
 
 server.on('upgrade', function upgrade(request, socket, head) {

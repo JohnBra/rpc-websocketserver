@@ -1,9 +1,8 @@
-import { Params, Method, MessageHandler, HandlerResult } from '../interfaces';
-import { validateMethod, validateParams } from '../utils';
+import { Method, MessageHandler, HandlerResult } from '../interfaces';
+import { parseRequest, validateMethod, validateParams } from '../utils';
 import { NOOP } from '../constants';
-import { assertValidRequest, buildError, buildResponse } from '../jsonrpc2/utils';
-import { Request } from '../jsonrpc2/interfaces';
-import { InvalidMethod, InvalidParams, ParseError } from '../jsonrpc2/errors';
+import { assertValidJSONRPC2Request, buildError, buildResponse } from '../jsonrpc2/utils';
+import { InvalidMethod, InvalidParams, InvalidRequest, ParseError } from '../jsonrpc2/errors';
 
 class JSONRPC2MessageHandler implements MessageHandler {
     handle(message: string, methods: Map<string, Method>): HandlerResult {
@@ -18,12 +17,13 @@ class JSONRPC2MessageHandler implements MessageHandler {
         };
 
         try {
-            const request = JSONRPC2MessageHandler.validateRequest(JSONRPC2MessageHandler.parse(message));
+            const request = parseRequest(message, ParseError);
+            assertValidJSONRPC2Request(request, InvalidRequest);
             // set request as data
             res.data.request = request;
-            const method = JSONRPC2MessageHandler.validateMethod(request.method, methods);
+            const method = validateMethod(request.method, methods, InvalidMethod);
             res.func = method.func;
-            res.args = JSONRPC2MessageHandler.validateParams(request.params, method.params);
+            res.args = validateParams(request?.params, method.params, InvalidParams);
             res.error = false;
         } catch (err) {
             // set json rpc 2 error as data
@@ -53,40 +53,6 @@ class JSONRPC2MessageHandler implements MessageHandler {
         if (jsonRpc2Response) jsonRpc2Response = JSON.stringify(jsonRpc2Response);
 
         return jsonRpc2Response;
-    }
-
-    // TODO accept string, Buffer, ArrayBuffer, Buffer[]
-    static parse(message: string): Request {
-        try {
-            return JSON.parse(message);
-        } catch (err) {
-            throw new ParseError(err.message);
-        }
-    }
-
-    static validateRequest(request: object): Request {
-        assertValidRequest(request);
-
-        const paramsOmitted = !request.hasOwnProperty('params');
-        const isNotification = !request.hasOwnProperty('id');
-
-        const res: Request = {
-            jsonrpc: request.jsonrpc,
-            method: request.method,
-            params: paramsOmitted ? {} : request.params,
-        };
-
-        if (!isNotification) res.id = request.id;
-
-        return res;
-    }
-
-    static validateMethod(methodName: string, registeredMethods: Map<string, Method>): Method {
-        return validateMethod(methodName, registeredMethods, InvalidMethod);
-    }
-
-    static validateParams(providedParams: object | Array<any>, expectedParams: Params): Array<any> {
-        return validateParams(providedParams, expectedParams, InvalidParams);
     }
 }
 

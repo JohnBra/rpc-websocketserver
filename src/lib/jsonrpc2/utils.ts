@@ -1,6 +1,5 @@
 import { ErrorObject, Id, Request, ResponseObject } from './interfaces';
-import { InvalidRequest } from './errors';
-import { assertValidRequest } from '../utils';
+import { assertValidRequest, E } from '../utils';
 
 const ERRORS = new Map([
     [-32600, 'Invalid Request'],
@@ -22,15 +21,15 @@ export function buildResponse(error: boolean, id: Id, data: any | ErrorObject): 
     return { jsonrpc: '2.0', result: data, id };
 }
 
-export function assertValidJSONRPC2Request(val: any): asserts val is Request {
+export function assertValidJSONRPC2Request(val: any, Err: E<Error>): asserts val is Request {
     if (val?.jsonrpc !== '2.0')
-        throw new InvalidRequest(`Value of 'jsonrpc' must be exactly '2.0' and of type 'string'`);
+        throw new Err(`Value of 'jsonrpc' must be exactly '2.0' and of type 'string'`);
 
     if (val.hasOwnProperty('id')) {
         if (typeof val.id !== 'string' && typeof val.id !== 'number' && val.id !== null) {
-            throw new InvalidRequest(`Value of 'id' should be of type 'string' or 'number'`);
+            throw new Err(`Value of 'id' should be of type 'string' or 'number'`);
         }
     }
 
-    assertValidRequest(val, InvalidRequest);
+    assertValidRequest(val, Err);
 }
