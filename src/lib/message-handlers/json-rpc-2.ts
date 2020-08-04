@@ -5,7 +5,7 @@ import { assertValidJSONRPC2Request, buildResponse } from '../json-rpc-2/utils';
 import { InternalError, InvalidMethod, InvalidParams, InvalidRequest, ParseError } from '../json-rpc-2/errors';
 
 class JSONRPC2MessageHandler implements MessageHandler {
-    handle(message: string, methods: Map<string, Method>): HandlerResult {
+    handle(message: string | Buffer, methods: Map<string, Method>): HandlerResult {
         const res: HandlerResult = {
             error: true,
             data: {

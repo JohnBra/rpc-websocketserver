@@ -3,7 +3,7 @@ import { assertValidRequest, parseRequest, validateMethod, validateParams } from
 import { NOOP } from '../constants';
 
 class SimpleMessageHandler implements MessageHandler {
-    handle(message: string, methods: Map<string, Method>): HandlerResult {
+    handle(message: string | Buffer, methods: Map<string, Method>): HandlerResult {
         const res: HandlerResult = { error: true, data: undefined, func: NOOP, args: [] };
 
         try {
