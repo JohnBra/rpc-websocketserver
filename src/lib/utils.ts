@@ -1,15 +1,15 @@
 import { Request, Method, MethodArgs, Params } from './interfaces';
 
-export interface E<T extends Error> extends Function {
+export interface ErrorType<T extends Error> extends Function {
     new (...args: Array<any>): T;
 }
 
-export function assertValidMessageType(val: any, Err: E<Error>): asserts val is Buffer | string {
+export function assertValidMessageType(val: any, Err: ErrorType<Error>): asserts val is Buffer | string {
     if (!Buffer.isBuffer(val) && typeof val !== 'string')
         throw new Err(`Message must be of type 'Buffer' or 'string'`);
 }
 
-export function assertValidRequest(val: any, Err: E<Error>): asserts val is Request {
+export function assertValidRequest(val: any, Err: ErrorType<Error>): asserts val is Request {
     if (typeof val?.method !== 'string')
         throw new Err(`Request must include prop 'method' with value of type 'string'`);
     if (val.hasOwnProperty('params')) {
@@ -18,13 +18,13 @@ export function assertValidRequest(val: any, Err: E<Error>): asserts val is Requ
     }
 }
 
-export function parseRequest(message: any, Err: E<Error>): JSON {
+export function parseRequest(message: any, Err: ErrorType<Error>): JSON {
     assertValidMessageType(message, Err);
     const m = Buffer.isBuffer(message) ? message.toString('utf8') : message;
     return JSON.parse(m);
 }
 
-export function validateMethod(methodName: string, registeredMethods: Map<string, Method>, Err: E<Error>): Method {
+export function validateMethod(methodName: string, registeredMethods: Map<string, Method>, Err: ErrorType<Error>): Method {
     const method = registeredMethods.get(methodName);
     if (!method) throw new Err(`Method with name '${methodName}' could not be found.`);
     return method;
@@ -33,7 +33,7 @@ export function validateMethod(methodName: string, registeredMethods: Map<string
 export function validateParams(
     providedParams: Params | MethodArgs | undefined,
     expectedParams: Params,
-    Err: E<Error>,
+    Err: ErrorType<Error>,
 ): MethodArgs {
     const expectedParamsKeys: Array<string> = Object.keys(expectedParams);
 
