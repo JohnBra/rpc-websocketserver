@@ -36,9 +36,8 @@ export function validateParams(
     Err: ErrorType<Error>,
 ): MethodArgs {
     const expectedParamsKeys: Array<string> = Object.keys(expectedParams);
-
+    let providedParamsKeys: Array<string> = [];
     let providedParamsLength = 0;
-    let providedParamsKeys = [];
 
     if (Array.isArray(providedParams)) {
         providedParamsLength = providedParams.length;
