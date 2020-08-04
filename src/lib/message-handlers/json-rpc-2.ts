@@ -1,8 +1,8 @@
+import { NOOP } from '../constants';
 import { Method, MessageHandler, HandlerResult } from '../interfaces';
 import { parseRequest, validateMethod, validateParams } from '../utils';
-import { NOOP } from '../constants';
-import { assertValidJSONRPC2Request, buildError, buildResponse } from '../json-rpc-2/utils';
-import { InvalidMethod, InvalidParams, InvalidRequest, ParseError } from '../json-rpc-2/errors';
+import { assertValidJSONRPC2Request, buildResponse } from '../json-rpc-2/utils';
+import { InternalError, InvalidMethod, InvalidParams, InvalidRequest, ParseError } from '../json-rpc-2/errors';
 
 class JSONRPC2MessageHandler implements MessageHandler {
     handle(message: string, methods: Map<string, Method>): HandlerResult {
@@ -44,7 +44,7 @@ class JSONRPC2MessageHandler implements MessageHandler {
                 if (!isNotification) jsonRpc2Response = buildResponse(false, requestId, executionResult);
             } catch (err) {
                 // catch internal server error on execution failure + build json rpc 2 response
-                jsonRpc2Response = buildResponse(true, requestId, buildError(-32603));
+                jsonRpc2Response = buildResponse(true, requestId, new InternalError().object);
             }
         } else {
             jsonRpc2Response = buildResponse(true, requestId, handlerResult.data.errorDetails);
