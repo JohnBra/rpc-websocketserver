@@ -6,12 +6,12 @@ export type Params = Record<string, any>;
 
 export type MethodArgs = Array<any>;
 
-export type BatchRequest = Request[];
-
 export interface Request {
     method: string;
     params?: Params | MethodArgs;
 }
+
+export type BatchRequest = Request[];
 
 export interface Method {
     namespace: string;
