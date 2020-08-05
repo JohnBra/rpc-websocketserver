@@ -1,6 +1,6 @@
 import { NOOP } from '../constants';
 import { Method, MessageHandler, HandlerResult } from '../interfaces';
-import { parseRequest, validateMethod, validateParams } from '../utils';
+import { parseMessage, validateMethod, validateParams } from '../utils';
 import { assertValidJSONRPC2Request, buildResponse } from '../json-rpc-2/utils';
 import { InternalError, InvalidMethod, InvalidParams, InvalidRequest, ParseError } from '../json-rpc-2/errors';
 
@@ -17,7 +17,7 @@ class JSONRPC2MessageHandler implements MessageHandler {
         };
 
         try {
-            const request = parseRequest(message, ParseError);
+            const request = parseMessage(message, ParseError);
             assertValidJSONRPC2Request(request, InvalidRequest);
             // set request as data
             res.data.request = request;

@@ -1,5 +1,5 @@
 import { HandlerResult, MessageHandler, Method } from '../interfaces';
-import { assertValidRequest, parseRequest, validateMethod, validateParams } from '../utils';
+import { assertValidRequest, parseMessage, validateMethod, validateParams } from '../utils';
 import { NOOP } from '../constants';
 
 class SimpleMessageHandler implements MessageHandler {
@@ -7,7 +7,7 @@ class SimpleMessageHandler implements MessageHandler {
         const res: HandlerResult = { error: true, data: undefined, func: NOOP, args: [] };
 
         try {
-            const req = parseRequest(message, Error);
+            const req = parseMessage(message, Error);
             assertValidRequest(req, Error);
             const method = validateMethod(req.method, methods, Error);
             res.args = validateParams(req?.params, method.params, Error);
