@@ -18,7 +18,7 @@ export function assertValidRequest(val: any, Err: ErrorType<Error>): asserts val
     }
 }
 
-export function parseMessage(message: any, Err: ErrorType<Error>): JSON {
+export function parseMessage(message: any, Err: ErrorType<Error>): object {
     assertValidMessageType(message, Err);
     const m = Buffer.isBuffer(message) ? message.toString('utf8') : message;
     return JSON.parse(m);

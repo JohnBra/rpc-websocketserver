@@ -1,3 +1,5 @@
+import {ErrorObject, Id} from "./json-rpc-2/interfaces";
+
 /**
  * A param has a string key and an any value.
  * If it is an expected param -> value is of type string
@@ -6,21 +8,19 @@ export type Params = Record<string, any>;
 
 export type MethodArgs = Array<any>;
 
-export interface Request {
+export type Request = {
     method: string;
     params?: Params | MethodArgs;
 }
 
-export type BatchRequest = Request[];
-
-export interface Method {
+export type Method = {
     namespace: string;
     name: string;
     params: Params;
     func: Function;
 }
 
-export interface HandlerResult {
+export type HandlerResult = {
     error: boolean;
     data: any;
     func: Function;
