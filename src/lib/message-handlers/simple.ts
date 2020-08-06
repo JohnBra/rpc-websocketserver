@@ -1,35 +1,41 @@
-import { HandlerResult, MessageHandler, Method } from '../interfaces';
-import { assertValidRequest, parseMessage, validateMethod, validateParams } from '../utils';
+import * as WebSocket from 'ws';
+import { HandlerResult, MessageHandler, Method, ValidationResult } from '../interfaces';
+import { assertValidRequest, validateAndParseMessage, validateMethod, validateParams } from '../utils';
 import { NOOP } from '../constants';
 
 class SimpleMessageHandler implements MessageHandler {
-    handle(message: string | Buffer, methods: Map<string, Method>): HandlerResult {
-        const res: HandlerResult = { error: true, data: undefined, func: NOOP, args: [] };
-
+    handle(message: string | Buffer, registeredMethods: Map<string, Method>): HandlerResult {
+        const handlerResult: HandlerResult = { error: true, data: 'Internal server error', requestData: undefined };
         try {
-            const req = parseMessage(message, Error);
-            assertValidRequest(req, Error);
-            const method = validateMethod(req.method, methods, Error);
-            res.args = validateParams(req?.params, method.params, Error);
-            res.func = method.func;
-            res.error = false;
+            const request = validateAndParseMessage(message, Error);
+            handlerResult.error = false;
+            assertValidRequest(request, Error);
+            const validationResult: ValidationResult = { error: true, data: undefined, func: NOOP, args: [] };
+            const method = validateMethod(request.method, registeredMethods, Error);
+            validationResult.args = validateParams(request?.params, method.params, Error);
+            validationResult.func = method.func;
+            validationResult.error = false;
+            handlerResult.requestData = validationResult;
         } catch (err) {
-            res.data = err.message;
+            handlerResult.data = err.message;
         }
-
-        return res;
+        return handlerResult;
     }
 
-    async process(handlerResult: HandlerResult): Promise<any> {
+    async process(handlerResult: HandlerResult): Promise<WebSocket.Data> {
         let response;
-        if (!handlerResult.error) {
-            try {
-                response = await handlerResult.func(...handlerResult.args);
-            } catch (err) {
-                console.log(err);
+        if (handlerResult.requestData && !Array.isArray(handlerResult.requestData)) {
+            const request = handlerResult.requestData;
+            if (!request.error) {
+                try {
+                    response =  await request.func(...request.args);
+                } catch (err) {
+                    console.log(err);
+                    response = 'Internal server error';
+                }
+            } else {
+                response = request.data;
             }
-        } else {
-            response = handlerResult.data;
         }
 
         return response;

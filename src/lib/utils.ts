@@ -18,10 +18,15 @@ export function assertValidRequest(val: any, Err: ErrorType<Error>): asserts val
     }
 }
 
-export function parseMessage(message: any, Err: ErrorType<Error>): object {
+export function validateAndParseMessage(message: any, Err: ErrorType<Error>): object {
     assertValidMessageType(message, Err);
-    const m = Buffer.isBuffer(message) ? message.toString('utf8') : message;
-    return JSON.parse(m);
+    let m = Buffer.isBuffer(message) ? message.toString('utf8') : message;
+    try {
+        m = JSON.parse(m);
+    } catch (err) {
+        throw new Err(err.message);
+    }
+    return m;
 }
 
 export function validateMethod(methodName: string, registeredMethods: Map<string, Method>, Err: ErrorType<Error>): Method {

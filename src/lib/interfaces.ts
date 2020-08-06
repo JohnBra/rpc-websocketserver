@@ -1,9 +1,10 @@
-import {ErrorObject, Id} from "./json-rpc-2/interfaces";
+import * as WebSocket from 'ws';
 
 /**
  * A param has a string key and an any value.
  * If it is an expected param -> value is of type string
  */
+
 export type Params = Record<string, any>;
 
 export type MethodArgs = Array<any>;
@@ -20,14 +21,20 @@ export type Method = {
     func: Function;
 }
 
-export type HandlerResult = {
+export type ValidationResult = {
     error: boolean;
     data: any;
     func: Function;
     args: MethodArgs;
 }
 
+export type HandlerResult = {
+    error: boolean;
+    data: WebSocket.Data | undefined;
+    requestData: ValidationResult | Array<ValidationResult> | undefined;
+};
+
 export interface MessageHandler {
-    handle(message: any, methods: Map<string, Method>): HandlerResult;
-    process(handlerResult: HandlerResult): any | Promise<any>;
+    handle(message: WebSocket.Data, registeredMethods: Map<string, Method>): HandlerResult;
+    process(handlerResult: HandlerResult): WebSocket.Data | Promise<WebSocket.Data>;
 }
