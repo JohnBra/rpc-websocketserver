@@ -37,7 +37,6 @@ class SimpleMessageHandler implements MessageHandler {
                 response = request.data;
             }
         }
-
         return response;
     }
 }
