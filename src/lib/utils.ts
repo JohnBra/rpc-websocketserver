@@ -4,9 +4,9 @@ export interface ErrorType<T extends Error> extends Function {
     new (...args: Array<any>): T;
 }
 
-export function assertValidMessageType(val: any, Err: ErrorType<Error>): asserts val is Buffer | string {
+export function assertStringOrBuffer(val: any, Err: ErrorType<Error>): asserts val is string | Buffer {
     if (!Buffer.isBuffer(val) && typeof val !== 'string')
-        throw new Err(`Message must be of type 'Buffer' or 'string'`);
+        throw new Err(`Message must be of type 'string' or 'Buffer'`);
 }
 
 export function assertValidRequest(val: any, Err: ErrorType<Error>): asserts val is Request {
@@ -19,14 +19,13 @@ export function assertValidRequest(val: any, Err: ErrorType<Error>): asserts val
 }
 
 export function validateAndParseMessage(message: any, Err: ErrorType<Error>): object {
-    assertValidMessageType(message, Err);
-    let m = Buffer.isBuffer(message) ? message.toString('utf8') : message;
+    assertStringOrBuffer(message, Err);
     try {
-        m = JSON.parse(m);
+        const m = Buffer.isBuffer(message) ? message.toString('utf8') : message;
+        return JSON.parse(m);
     } catch (err) {
         throw new Err(err.message);
     }
-    return m;
 }
 
 export function validateMethod(methodName: string, registeredMethods: Map<string, Method>, Err: ErrorType<Error>): Method {

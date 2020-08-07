@@ -5,17 +5,17 @@ import { NOOP } from '../constants';
 
 class SimpleMessageHandler implements MessageHandler {
     handle(message: string | Buffer, registeredMethods: Map<string, Method>): HandlerResult {
-        const handlerResult: HandlerResult = { error: true, data: 'Internal server error', requestData: undefined };
+        const handlerResult: HandlerResult = { error: true, data: 'Internal server error', ctx: undefined };
         try {
             const request = validateAndParseMessage(message, Error);
-            handlerResult.error = false;
             assertValidRequest(request, Error);
             const validationResult: ValidationResult = { error: true, data: undefined, func: NOOP, args: [] };
             const method = validateMethod(request.method, registeredMethods, Error);
             validationResult.args = validateParams(request?.params, method.params, Error);
             validationResult.func = method.func;
             validationResult.error = false;
-            handlerResult.requestData = validationResult;
+            handlerResult.ctx = validationResult;
+            handlerResult.error = false;
         } catch (err) {
             handlerResult.data = err.message;
         }
@@ -24,17 +24,16 @@ class SimpleMessageHandler implements MessageHandler {
 
     async process(handlerResult: HandlerResult): Promise<WebSocket.Data> {
         let response;
-        if (handlerResult.requestData && !Array.isArray(handlerResult.requestData)) {
-            const request = handlerResult.requestData;
-            if (!request.error) {
+        if (handlerResult.ctx && !Array.isArray(handlerResult.ctx)) {
+            if (!handlerResult.ctx.error) {
                 try {
-                    response =  await request.func(...request.args);
+                    response =  await handlerResult.ctx.func(...handlerResult.ctx.args);
                 } catch (err) {
                     console.log(err);
                     response = 'Internal server error';
                 }
             } else {
-                response = request.data;
+                response = handlerResult.ctx.data;
             }
         }
         return response;

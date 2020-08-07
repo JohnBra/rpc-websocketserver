@@ -30,8 +30,8 @@ export type ValidationResult = {
 
 export type HandlerResult = {
     error: boolean;
-    data: WebSocket.Data | undefined;
-    requestData: ValidationResult | Array<ValidationResult> | undefined;
+    data: any;
+    ctx: ValidationResult | Array<ValidationResult> | undefined;
 };
 
 export interface MessageHandler {
