@@ -9,8 +9,8 @@ class JSONRPC2MessageHandler implements MessageHandler {
         const res: HandlerResult = {
             error: true,
             data: {
-                request: {},
-                errorDetails: undefined,
+                request: undefined,
+                errorDetails: undefined
             },
             func: NOOP,
             args: [],
@@ -33,13 +33,14 @@ class JSONRPC2MessageHandler implements MessageHandler {
     }
 
     async process(handlerResult: HandlerResult): Promise<any> {
-        const isNotification = !handlerResult.data.request.hasOwnProperty('id');
+        const { error, data, func, args } = handlerResult;
+        const isNotification = !data.request.hasOwnProperty('id');
         const requestId = handlerResult.data.request.id ?? null;
 
         let jsonRpc2Response;
-        if (!handlerResult.error) {
+        if (!error) {
             try {
-                const executionResult = await handlerResult.func(...handlerResult.args);
+                const executionResult = await func(...args);
                 // only build response if request wasn't a notification
                 if (!isNotification) jsonRpc2Response = buildResponse(false, requestId, executionResult);
             } catch (err) {

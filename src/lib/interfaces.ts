@@ -21,20 +21,14 @@ export type Method = {
     func: Function;
 }
 
-export type ValidationResult = {
+export type HandlerResult = {
     error: boolean;
     data: any;
     func: Function;
     args: MethodArgs;
 }
 
-export type HandlerResult = {
-    error: boolean;
-    data: any;
-    ctx: ValidationResult | Array<ValidationResult> | undefined;
-};
-
 export interface MessageHandler {
     handle(message: WebSocket.Data, registeredMethods: Map<string, Method>): HandlerResult;
-    process(handlerResult: HandlerResult): WebSocket.Data | Promise<WebSocket.Data>;
+    process(handlerResult: HandlerResult): WebSocket.Data | Promise<WebSocket.Data> | undefined;
 }
