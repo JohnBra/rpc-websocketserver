@@ -8,10 +8,7 @@ class JSONRPC2MessageHandler implements MessageHandler {
     handle(message: string | Buffer, methods: Map<string, Method>): HandlerResult {
         const res: HandlerResult = {
             error: true,
-            data: {
-                request: undefined,
-                errorDetails: undefined
-            },
+            data: {},
             func: NOOP,
             args: [],
         };
@@ -20,7 +17,7 @@ class JSONRPC2MessageHandler implements MessageHandler {
             const request = validateAndParseMessage(message, ParseError);
             assertValidJSONRPC2Request(request, InvalidRequest);
             // set request as data
-            res.data.request = request;
+            res.data.requestId = request.id;
             const method = validateMethod(request.method, methods, InvalidMethod);
             res.func = method.func;
             res.args = validateParams(request?.params, method.params, InvalidParams);
@@ -34,8 +31,8 @@ class JSONRPC2MessageHandler implements MessageHandler {
 
     async process(handlerResult: HandlerResult): Promise<any> {
         const { error, data, func, args } = handlerResult;
-        const isNotification = !data.request.hasOwnProperty('id');
-        const requestId = handlerResult.data.request.id ?? null;
+        const isNotification = !data.hasOwnProperty('requestId');
+        const requestId = handlerResult.data.requestId ?? null;
 
         let jsonRpc2Response;
         if (!error) {
@@ -48,11 +45,10 @@ class JSONRPC2MessageHandler implements MessageHandler {
                 jsonRpc2Response = buildResponse(true, requestId, new InternalError().object);
             }
         } else {
-            jsonRpc2Response = buildResponse(true, requestId, handlerResult.data.errorDetails);
+            jsonRpc2Response = buildResponse(true, requestId, data.errorDetails);
         }
 
         if (jsonRpc2Response) jsonRpc2Response = JSON.stringify(jsonRpc2Response);
-
         return jsonRpc2Response;
     }
 }

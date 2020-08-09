@@ -32,15 +32,11 @@ export abstract class WebSocketServer {
 
     protected async _onMessage(ws: WebSocket, message: WebSocket.Data): Promise<void> {
         const handlerResult = this._messageHandler.handle(message, this._namespaceMethods);
-        if (handlerResult.error) {
-            if (handlerResult.data) this._sendMessage(ws, handlerResult.data);
-        } else {
-            try {
-                const res: WebSocket.Data = await this._messageHandler.process(handlerResult);
-                if (res) this._sendMessage(ws, res);
-            } catch (err) {
-                // do nothing or potentially log error
-            }
+        try {
+            const res = await this._messageHandler.process(handlerResult);
+            if (res) this._sendMessage(ws, res);
+        } catch (err) {
+            // do nothing or potentially log error
         }
     }
 

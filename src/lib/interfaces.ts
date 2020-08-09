@@ -30,5 +30,5 @@ export type HandlerResult = {
 
 export interface MessageHandler {
     handle(message: WebSocket.Data, registeredMethods: Map<string, Method>): HandlerResult;
-    process(handlerResult: HandlerResult): WebSocket.Data | Promise<WebSocket.Data> | undefined;
+    process(handlerResult: HandlerResult): WebSocket.Data | Promise<WebSocket.Data> | undefined | Promise<undefined>;
 }
