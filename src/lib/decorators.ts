@@ -1,12 +1,11 @@
 import 'reflect-metadata';
 import { Method, Params } from './interfaces';
 
-const PARAMETER_NAME_KEY = Symbol('parameterName');
+export const PARAM_NAMES_KEY = Symbol('__paramNames__');
 
-export function register(methodName?: string) {
+export function register(methodName?: string): Function {
     return function (target: any, propertyKey: string | symbol, descriptor: PropertyDescriptor): void {
-        const paramNames: Array<string> = Reflect.getOwnMetadata(PARAMETER_NAME_KEY, target, propertyKey) || [];
-        // param types are being added but not checked -> maybe checked in the future
+        const paramNames: Array<string> = Reflect.getOwnMetadata(PARAM_NAMES_KEY, target, propertyKey) || [];
         const paramTypes: Array<any> = Reflect.getMetadata('design:paramtypes', target, propertyKey) || [];
 
         const params: Params = {};
@@ -30,12 +29,12 @@ export function register(methodName?: string) {
 }
 
 // TODO add limitations of parameters to readme (no type checking implemented)
-export function param(name: string) {
+export function param(name: string): Function {
     return function (target: Object, propertyKey: string | symbol, parameterIndex: number): void {
-        const paramNames = Reflect.getOwnMetadata(PARAMETER_NAME_KEY, target, propertyKey) || [];
+        const paramNames = Reflect.getOwnMetadata(PARAM_NAMES_KEY, target, propertyKey) || [];
 
         paramNames[parameterIndex] = name;
 
-        Reflect.defineMetadata(PARAMETER_NAME_KEY, paramNames, target, propertyKey);
+        Reflect.defineMetadata(PARAM_NAMES_KEY, paramNames, target, propertyKey);
     };
 }
