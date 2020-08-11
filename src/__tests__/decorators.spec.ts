@@ -1,15 +1,28 @@
 import 'reflect-metadata';
-import {param, PARAM_NAMES_KEY, register} from '../lib/decorators';
+import { PARAM_NAMES_KEY, param, register } from '../lib/decorators';
 import { WebSocketServer } from '../lib/websocket-server';
+import {MessageHandler, Method} from '../lib/interfaces';
 
-const paramNameA = 'a';
-const paramNameB = 'b';
 
-class DummyNamespace extends WebSocketServer {
-    rpcA(@param(paramNameA) a: string): void {};
+class MockNamespace extends WebSocketServer {
+    constructor() {
+        super({} as MessageHandler, { noServer: true });
+    }
+
+    @register()
+    rpcA() {}
+
+    @register('otherName')
+    rpcB() {}
+
+    @register()
+    rpcC(@param('a') a: string) {}
 }
 
 describe('param decorator', () => {
+    const paramNameA = 'a';
+    const paramNameB = 'b';
+
     it('should return a function', () => {
         const result = param('a');
         expect(typeof result).toBe('function');
@@ -44,8 +57,15 @@ describe('param decorator', () => {
 
 
 describe('register decorator', () => {
+
     it('should return a function', () => {
         const result = register('a');
         expect(typeof result).toBe('function');
+    });
+
+    it('should add a methods to websocket server static methods set', () => {
+        let mockNamespace = new MockNamespace();
+
+        expect(WebSocketServer['methods'].size).toEqual(3);
     });
 });

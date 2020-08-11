@@ -28,7 +28,11 @@ export function validateAndParseMessage(message: any, Err: ErrorType<Error>): ob
     }
 }
 
-export function validateMethod(methodName: string, registeredMethods: Map<string, Method>, Err: ErrorType<Error>): Method {
+export function validateMethod(
+    methodName: string,
+    registeredMethods: Map<string, Method>,
+    Err: ErrorType<Error>,
+): Method {
     const method = registeredMethods.get(methodName);
     if (!method) throw new Err(`Method with name '${methodName}' could not be found.`);
     return method;
