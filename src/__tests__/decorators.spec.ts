@@ -63,7 +63,7 @@ describe('register decorator', () => {
         expect(typeof result).toBe('function');
     });
 
-    it('should add a methods to websocket server static methods set', () => {
+    it('should add a method to the websocket server\'s static methods set', () => {
         let mockNamespace = new MockNamespace();
 
         expect(WebSocketServer['methods'].size).toEqual(3);

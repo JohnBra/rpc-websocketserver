@@ -37,13 +37,19 @@ class MockNamespaceB extends WebSocketServer {
 describe('WebSocketServer abstract class', () => {
     let wssOptions: WebSocket.ServerOptions;
     let mockMessageHandler: MessageHandler;
+    let mockNamespaceA: WebSocketServer;
+    let mockNamespaceB: WebSocketServer;
 
     beforeAll(() => {
         wssOptions = { noServer: true };
         mockMessageHandler = new MockMessageHandler();
     });
 
-
+    afterAll(() => {
+        mockNamespaceA.wss.clients.forEach((ws) => {
+            ws.close(0);
+        });
+    });
 
     it('should instantiate without failure', () => {
         function instantiateMockNamespace() {
@@ -54,10 +60,10 @@ describe('WebSocketServer abstract class', () => {
     });
 
     it('getMethods() should return Map (string, Method) of namespace methods', () => {
-        const mockNamespaceA = new MockNamespaceA(mockMessageHandler, wssOptions);
+        mockNamespaceA = new MockNamespaceA(mockMessageHandler, wssOptions);
         const methodsNamespaceA = mockNamespaceA.getMethods();
 
-        const mockNamespaceB = new MockNamespaceB(mockMessageHandler, wssOptions);
+        mockNamespaceB = new MockNamespaceB(mockMessageHandler, wssOptions);
         const methodsNamespaceB = mockNamespaceB.getMethods();
 
         expect(methodsNamespaceA.size).toBe(0);
@@ -67,6 +73,6 @@ describe('WebSocketServer abstract class', () => {
     });
 
     it('broadcastMessage(data) should send a message to all connected clients', () => {
-
+        expect(1).toBe(1);
     });
 });

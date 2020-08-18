@@ -37,7 +37,7 @@ describe('SimpleMessageHandler class', () => {
         registeredMethods.set(registeredMethodA.name, registeredMethodA);
     });
 
-    test('constructor call without parameters does not throw error', () => {
+    it('should not throw error on constructor call without parameters', () => {
 
         function instantiateSimpleMessageHandler() {
             new Simple();
