@@ -1,4 +1,4 @@
-import {assertStringOrBuffer, validateMethod, validateParams} from '../lib/utils';
+import {assertStringOrBuffer, assertValidRequest, validateMethod, validateParams} from '../lib/utils';
 import { Params, Method } from '../lib/interfaces';
 
 describe('assertStringOrBuffer', () => {
@@ -26,17 +26,42 @@ describe('assertStringOrBuffer', () => {
 });
 
 describe('assertValidRequest', () => {
+    const validRequestA = { method: 'foo', params: [] };
+    const validRequestB = { method: 'foo', params: {} };
+    const validRequestC = { method: 'foo' };
+
     it('it should not throw error if val is of type request', () => {
         function validateAssertBufferOrString() {
-            assertStringOrBuffer(1, Error);
+            assertValidRequest(validRequestA, Error);
+            assertValidRequest(validRequestB, Error);
+            assertValidRequest(validRequestC, Error);
         }
 
-        expect(validateAssertBufferOrString).toThrow(Error);
+        expect(validateAssertBufferOrString).not.toThrow();
+    });
+
+    it('it should throw error if val is not a valid request', () => {
+        function validateAssertValidRequestThrowMethodMissing() {
+            const req = { params: [] };
+            assertValidRequest(req, Error);
+        }
+
+        function validateAssertValidRequestThrowInvalidParamType() {
+            const req = { method: 'foo', params: 1 };
+            assertValidRequest(req, Error);
+        }
+
+        expect(validateAssertValidRequestThrowMethodMissing).toThrow();
+        expect(validateAssertValidRequestThrowMethodMissing)
+            .toThrow(`Request must include prop 'method' with value of type 'string'`);
+        expect(validateAssertValidRequestThrowInvalidParamType).toThrow();
+        expect(validateAssertValidRequestThrowInvalidParamType)
+            .toThrow(`Params must be one of 'object' or 'array'`);
     });
 });
 
 describe('validateAndParseMessage', () => {
-
+    
 });
 
 describe('validateParams', () => {
