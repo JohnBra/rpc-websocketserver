@@ -1,6 +1,43 @@
-import { validateMethod, validateParams } from '../lib/utils';
+import {assertStringOrBuffer, validateMethod, validateParams} from '../lib/utils';
 import { Params, Method } from '../lib/interfaces';
-import { EMPTY_METHOD } from "../lib/constants";
+
+describe('assertStringOrBuffer', () => {
+    it('should not throw error if val is of type string or buffer', () => {
+        function validateAssertString() {
+            assertStringOrBuffer('a', Error)
+        }
+
+        function validateAssertBuffer() {
+            const buf = Buffer.alloc(1, 'a');
+            assertStringOrBuffer(buf, Error)
+        }
+
+        expect(validateAssertString).not.toThrow();
+        expect(validateAssertBuffer).not.toThrow();
+    });
+
+    it('should throw error if value is not of type string or buffer', () => {
+        function validateAssertBufferOrString() {
+            assertStringOrBuffer(1, Error);
+        }
+
+        expect(validateAssertBufferOrString).toThrow(Error);
+    });
+});
+
+describe('assertValidRequest', () => {
+    it('it should not throw error if val is of type request', () => {
+        function validateAssertBufferOrString() {
+            assertStringOrBuffer(1, Error);
+        }
+
+        expect(validateAssertBufferOrString).toThrow(Error);
+    });
+});
+
+describe('validateAndParseMessage', () => {
+
+});
 
 describe('validateParams', () => {
     const expectedParams: Params = {
