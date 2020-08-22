@@ -10,12 +10,52 @@ describe('validateParams', () => {
     const expectedParamsKeys = Object.keys(expectedParams);
     const expectedMethodArgs: Array<any> = ['abc', 1];
 
-    it('should return method args on successful validation', () => {
+    it('should return method args on successful validation of params object', () => {
         const providedParamsObject = { 'a': 'abc', 'b': 1 };
 
-        const paramValidatorResult = validateParams(providedParamsObject, expectedParams, Error);
+        const methodArgs = validateParams(providedParamsObject, expectedParams, Error);
 
-        expect(paramValidatorResult).toEqual(expectedMethodArgs);
+        expect(methodArgs).toEqual(expectedMethodArgs);
+    });
+
+    it('should return method args on successful validation of params array', () => {
+        const providedParamsArray = ['abc', 1];
+
+        const methodArgs = validateParams(providedParamsArray, expectedParams, Error);
+
+        expect(methodArgs).toEqual(expectedMethodArgs);
+    });
+
+    it('should throw descriptive error if provided and expected params length are not equal', () => {
+        const providedParamsObject = { 'a': 'abc', 'b': 1, 'c': 123 };
+        const providedParamsObjectLength = Object.keys(providedParamsObject).length;
+        const providedParamsArray = ['abc', 1, 123];
+
+        function validateParamsThrowIncorrectLengthObjectError() {
+            validateParams(providedParamsObject, expectedParams, Error);
+        }
+
+        function validateParamsThrowIncorrectLengthArrayError() {
+            validateParams(providedParamsArray, expectedParams, Error);
+        }
+
+        expect(validateParamsThrowIncorrectLengthObjectError).toThrow();
+        expect(validateParamsThrowIncorrectLengthObjectError)
+            .toThrow(`Expected ${expectedParamsKeys.length} params. Received ${providedParamsObjectLength}.`);
+        expect(validateParamsThrowIncorrectLengthArrayError).toThrow();
+        expect(validateParamsThrowIncorrectLengthArrayError)
+            .toThrow(`Expected ${expectedParamsKeys.length} params. Received ${providedParamsArray.length}.`);
+    });
+
+    it('should throw descriptive error if param is missing from provided params object', () => {
+        const providedParamsObject = { 'c': 'abc', 'b': 1};
+
+        function validateParamsThrowMissingPropertyError() {
+            validateParams(providedParamsObject, expectedParams, Error);
+        }
+
+        expect(validateParamsThrowMissingPropertyError).toThrow();
+        expect(validateParamsThrowMissingPropertyError).toThrow(`Params must include 'a'`);
     });
 });
 
