@@ -10,7 +10,7 @@ describe('validateParams', () => {
     const expectedParamsKeys = Object.keys(expectedParams);
     const expectedMethodArgs: Array<any> = ['abc', 1];
 
-    test('should return method args on successful validation', () => {
+    it('should return method args on successful validation', () => {
         const providedParamsObject = { 'a': 'abc', 'b': 1 };
 
         const paramValidatorResult = validateParams(providedParamsObject, expectedParams, Error);
@@ -26,10 +26,22 @@ describe('validateMethod', () => {
     registeredMethods.set(registeredMethodA.name, registeredMethodA);
     registeredMethods.set(registeredMethodB.name, registeredMethodB);
 
-    test('should return method on successful validation', () => {
-        const validatorResult: Method = validateMethod(registeredMethodB.name, registeredMethods, Error);
+    it('should return method on successful validation', () => {
+        const method: Method = validateMethod(registeredMethodB.name, registeredMethods, Error);
 
-        expect(validatorResult.name).toEqual(registeredMethodB.name);
-        expect(validatorResult.name).not.toEqual(registeredMethodA.name);
+        expect(method.name).toEqual(registeredMethodB.name);
+        expect(method.name).not.toEqual(registeredMethodA.name);
+    });
+
+    it('should throw a descriptive error when method could not be found', () => {
+        const unknownMethodName = 'unknownMethodName';
+
+        function validateMethodThrowError() {
+            validateMethod(unknownMethodName, registeredMethods, Error);
+        }
+
+        expect(validateMethodThrowError).toThrow();
+        expect(validateMethodThrowError).toThrow(Error);
+        expect(validateMethodThrowError).toThrow(`Method with name '${unknownMethodName}' could not be found.`)
     });
 });
