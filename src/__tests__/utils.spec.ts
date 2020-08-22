@@ -37,13 +37,13 @@ describe('assertValidRequest', () => {
     const validRequestC = { method: 'foo' };
 
     it('it should not throw error if val is of type request', () => {
-        function validateAssertBufferOrString() {
+        function validateAssertValidRequest() {
             assertValidRequest(validRequestA, Error);
             assertValidRequest(validRequestB, Error);
             assertValidRequest(validRequestC, Error);
         }
 
-        expect(validateAssertBufferOrString).not.toThrow();
+        expect(validateAssertValidRequest).not.toThrow();
     });
 
     it('it should throw error if val is not a valid request', () => {
