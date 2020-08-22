@@ -1,4 +1,10 @@
-import {assertStringOrBuffer, assertValidRequest, validateMethod, validateParams} from '../lib/utils';
+import {
+    assertStringOrBuffer,
+    assertValidRequest,
+    validateAndParseMessage,
+    validateMethod,
+    validateParams
+} from '../lib/utils';
 import { Params, Method } from '../lib/interfaces';
 
 describe('assertStringOrBuffer', () => {
@@ -61,7 +67,32 @@ describe('assertValidRequest', () => {
 });
 
 describe('validateAndParseMessage', () => {
-    
+    const validStringMessage = JSON.stringify({ method: 'foo' });
+    const validBufferMessage = new Buffer(validStringMessage);
+
+    it('should return a JSON object if the message could be parsed successfully', () => {
+        const resultA = validateAndParseMessage(validBufferMessage, Error);
+        const resultB = validateAndParseMessage(validStringMessage, Error);
+
+        expect(typeof resultA).toBe('object');
+        expect(typeof resultB).toBe('object');
+    });
+
+    it('should throw error if message is not of type string or buffer', () => {
+        function validateAndParseMessageThrowOnIncorrectMessageType() {
+            validateAndParseMessage(1, Error);
+        }
+
+        expect(validateAndParseMessageThrowOnIncorrectMessageType).toThrow();
+    });
+
+    it('should throw error if message could not be parsed', () => {
+        function validateAndParseMessageThrowOnIncorrectJson() {
+            validateAndParseMessage('[', Error);
+        }
+
+        expect(validateAndParseMessageThrowOnIncorrectJson).toThrow();
+    });
 });
 
 describe('validateParams', () => {
