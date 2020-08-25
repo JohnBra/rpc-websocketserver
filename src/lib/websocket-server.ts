@@ -31,8 +31,8 @@ export abstract class WebSocketServer {
     }
 
     protected async _onMessage(ws: WebSocket, message: WebSocket.Data): Promise<void> {
-        const handlerResult = this._messageHandler.handle(message, this._namespaceMethods);
         try {
+            const handlerResult = this._messageHandler.handle(message, this._namespaceMethods);
             const res = await this._messageHandler.process(handlerResult);
             if (res) this._sendMessage(ws, res);
         } catch (err) {

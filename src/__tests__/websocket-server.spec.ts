@@ -8,6 +8,11 @@ import express from 'express';
 import http from 'http';
 import url from 'url';
 
+async function sleep(ms: number): Promise<void> {
+    return new Promise<void>(resolve => {
+        setTimeout(() => resolve(), ms);
+    });
+}
 
 class MockClient {
     ws: WebSocket;
@@ -16,27 +21,20 @@ class MockClient {
     constructor(host: string, port: number) {
         this.ws = new WebSocket(`ws://${host}:${port}/`);
         this.messages = [];
+        this.ws.on('message', (data: any) => this.messages.push(data));
     }
 
     async open(): Promise<void> {
-        return new Promise<void>((resolve, reject) => {
-            const timeout = setTimeout(() => reject(), 10000);
+        return new Promise<void>(resolve => {
+            // jest automatically timeouts after 5 seconds, if not resolved
             this.ws.on('open', () => {
-                clearTimeout(timeout);
                 resolve();
             });
         });
     }
 
-    async message(): Promise<void> {
-        return new Promise<void>((resolve, reject) => {
-            const timeout = setTimeout(() => reject(), 10000);
-            this.ws.on('message', (data: any) => {
-                this.messages.push(data);
-                clearTimeout(timeout);
-                resolve();
-            });
-        });
+    send(msg: string | Buffer): void {
+        this.ws.send(msg);
     }
 
     clean() {
@@ -160,13 +158,26 @@ describe('WebSocketServer abstract class', () => {
     });
 
     it('broadcastMessage(data) should send a message to all connected clients', async () => {
-        const mockClient = new MockClient(host, port);
-        await mockClient.open();
+        const mockClientA = new MockClient(host, port);
+        const mockClientB = new MockClient(host, port);
+        await mockClientA.open();
+        await mockClientB.open();
 
         const message = 'a';
         mockServer.mockNamespace.broadcastMessage(message);
-        await mockClient.message();
-        expect(mockClient.messages[0]).toBe(message);
+        await sleep(2000);
+        expect(mockClientA.messages[0]).toBe(message);
+        expect(mockClientB.messages[0]).toBe(message);
+        mockClientA.clean();
+        mockClientB.clean();
+    });
+
+    it('should not throw error on websocket message', async () => {
+        const mockClient = new MockClient(host, port);
+        await mockClient.open();
+
+        mockClient.send('a');
+        await sleep(2000);
         mockClient.clean();
     });
 });
