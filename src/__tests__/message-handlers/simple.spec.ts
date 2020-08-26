@@ -1,22 +1,14 @@
-import Simple from '../../lib/message-handlers/simple';
-import { HandlerResult, Method } from '../../lib/interfaces';
-import { NOOP } from '../../lib/constants';
+import { Method } from '../../lib/interfaces';
+import SimpleMessageHandler from "../../lib/message-handlers/simple";
+import { NOOP } from "../../lib/constants";
 
-class MockClass {
-    getThrowErrorFunction(): Function {
-        return this.throwError;
-    }
-
+class MockNamespace {
     getMockSumFunction(): Function {
         return this.mockSum;
     }
 
     mockSum(a: string, b: number): string {
         return a + b;
-    }
-
-    throwError(): void {
-        throw Error('Some error');
     }
 }
 
@@ -38,11 +30,32 @@ describe('SimpleMessageHandler class', () => {
     });
 
     it('should not throw error on constructor call without parameters', () => {
-
         function instantiateSimpleMessageHandler() {
-            new Simple();
+            new SimpleMessageHandler();
         }
 
         expect(instantiateSimpleMessageHandler).not.toThrow();
+    });
+
+    it('handle() should return !error handler result on success', () => {
+        const msg = JSON.stringify({method: registeredMethodA.name, params: { a: 'abc', b: 1 }});
+        const messageHandler = new SimpleMessageHandler();
+        const res = messageHandler.handle(msg, registeredMethods);
+
+        expect(res.error).toBe(false);
+        expect(res.data).toBeUndefined();
+        expect(res.func).toEqual(registeredMethodA.func);
+        expect(res.args).toEqual(registeredMethodAExpectedArgs);
+    });
+
+    it('handle() should return error handler result on failure', () => {
+        const msg = JSON.stringify({ params: { a: 'abc', b: 1 } });
+        const messageHandler = new SimpleMessageHandler();
+        const res = messageHandler.handle(msg, registeredMethods);
+
+        expect(res.error).toBe(true);
+        expect(res.data).toBeDefined();
+        expect(res.func).toEqual(NOOP);
+        expect(res.args).toEqual([]);
     });
 });

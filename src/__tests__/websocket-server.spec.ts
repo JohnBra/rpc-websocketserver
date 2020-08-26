@@ -176,7 +176,7 @@ describe('WebSocketServer abstract class', () => {
         mockMessageHandler.res = dat;
 
         mockClient.send(dat);
-        await sleep(500);
+        await sleep(1000);
         expect(mockClient.messages[0]).toBe(dat);
         mockClient.clean();
     });
@@ -188,7 +188,7 @@ describe('WebSocketServer abstract class', () => {
         mockMessageHandler.res = undefined;
 
         mockClient.send('a');
-        await sleep(500);
+        await sleep(1000);
         expect(mockClient.messages.length).toBe(0);
         mockClient.clean();
     });
