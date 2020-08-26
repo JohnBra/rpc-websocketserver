@@ -16,14 +16,14 @@ class JSONRPC2MessageHandler implements MessageHandler {
         try {
             const request = validateAndParseMessage(message, ParseError);
             assertValidJSONRPC2Request(request, InvalidRequest);
-            // set request as data
+            // set request as res
             res.data.requestId = request.id;
             const method = validateMethod(request.method, methods, InvalidMethod);
             res.func = method.func;
             res.args = validateParams(request?.params, method.params, InvalidParams);
             res.error = false;
         } catch (err) {
-            // set json rpc 2 error as data
+            // set json rpc 2 error as res
             res.data.errorDetails = err?.object;
         }
         return res;

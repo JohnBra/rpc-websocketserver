@@ -7,6 +7,7 @@ import { register } from '../lib/decorators';
 import express from 'express';
 import http from 'http';
 import url from 'url';
+import mock = jest.mock;
 
 async function sleep(ms: number): Promise<void> {
     return new Promise<void>(resolve => {
@@ -27,9 +28,7 @@ class MockClient {
     async open(): Promise<void> {
         return new Promise<void>(resolve => {
             // jest automatically timeouts after 5 seconds, if not resolved
-            this.ws.on('open', () => {
-                resolve();
-            });
+            this.ws.on('open', () => resolve());
         });
     }
 
@@ -86,12 +85,13 @@ class MockServer {
 }
 
 class MockMessageHandler implements MessageHandler {
+    res: WebSocket.Data | undefined = undefined;
     handle(message: WebSocket.Data, registeredMethods: Map<string, Method>): HandlerResult {
-        return { error: false, data: undefined, func: NOOP, args: [] };
+        return { error: false, data: this.res, func: NOOP, args: [] };
     }
 
     process(handlerResult: HandlerResult): WebSocket.Data | Promise<WebSocket.Data | undefined> | undefined {
-        return undefined;
+        return this.res;
     }
 }
 
@@ -116,7 +116,7 @@ describe('WebSocketServer abstract class', () => {
     const host = 'localhost';
     const port = 9999;
     let wssOptions: WebSocket.ServerOptions;
-    let mockMessageHandler: MessageHandler;
+    let mockMessageHandler: MockMessageHandler;
     let mockNamespaceA: WebSocketServer;
     let mockNamespaceB: WebSocketServer;
     let mockServer: MockServer;
@@ -153,7 +153,7 @@ describe('WebSocketServer abstract class', () => {
         expect(methodsNamespaceB.get('foo')).not.toBeUndefined();
     });
 
-    it('broadcastMessage(data) should send a message to all connected clients', async () => {
+    it('broadcastMessage(res) should send a message to all connected clients', async () => {
         const mockClientA = new MockClient(host, port);
         const mockClientB = new MockClient(host, port);
         await mockClientA.open();
@@ -168,12 +168,28 @@ describe('WebSocketServer abstract class', () => {
         mockClientB.clean();
     });
 
-    it('should not throw error on websocket message', async () => {
+    it('_onMessage() should return message handler result to client if defined', async () => {
         const mockClient = new MockClient(host, port);
         await mockClient.open();
 
+        const dat = 'a';
+        mockMessageHandler.res = dat;
+
+        mockClient.send(dat);
+        await sleep(500);
+        expect(mockClient.messages[0]).toBe(dat);
+        mockClient.clean();
+    });
+
+    it('_onMessage() should return nothing to client if message handler result is undefined', async () => {
+        const mockClient = new MockClient(host, port);
+        await mockClient.open();
+
+        mockMessageHandler.res = undefined;
+
         mockClient.send('a');
         await sleep(500);
+        expect(mockClient.messages.length).toBe(0);
         mockClient.clean();
     });
 });
