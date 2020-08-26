@@ -86,6 +86,8 @@ class MockServer {
         this.mockNamespace.wss.clients.forEach((ws: WebSocket) => {
             ws.close();
         });
+
+        this.server.close();
     }
 }
 
@@ -165,7 +167,7 @@ describe('WebSocketServer abstract class', () => {
 
         const message = 'a';
         mockServer.mockNamespace.broadcastMessage(message);
-        await sleep(2000);
+        await sleep(1000);
         expect(mockClientA.messages[0]).toBe(message);
         expect(mockClientB.messages[0]).toBe(message);
         mockClientA.clean();
@@ -177,7 +179,7 @@ describe('WebSocketServer abstract class', () => {
         await mockClient.open();
 
         mockClient.send('a');
-        await sleep(2000);
+        await sleep(1000);
         mockClient.clean();
     });
 });
