@@ -33,7 +33,7 @@ class MockClient {
         });
     }
 
-    send(msg: string | Buffer): void {
+    send(msg: WebSocket.Data): void {
         this.ws.send(msg);
     }
 
@@ -49,6 +49,7 @@ class MockServer {
     host: string;
     port: number;
     mockNamespace: WebSocketServer;
+    messages: Array<any>;
 
     constructor(host: string, port: number, mockNamespace: WebSocketServer) {
         this.host = host;
@@ -56,29 +57,23 @@ class MockServer {
         this.app = express();
         this.server = http.createServer(this.app);
         this.mockNamespace = mockNamespace;
+        this.messages = [];
 
-        this.server.on('upgrade', async (request: any, socket: any, head: any) => {
+        this.server.on('upgrade', (request: any, socket: any, head: any) => {
             const { pathname } = url.parse(request.url);
             if (pathname === '/') {
-                await this.handleUpgrade(request, socket, head);
+                this.mockNamespace.wss.handleUpgrade(request, socket, head, (ws: WebSocket) => {
+                    this.mockNamespace.wss.emit('connection', ws, request);
+                });
             } else {
                 socket.destroy();
             }
         });
     }
 
-    async handleUpgrade(request: any, socket: any, head: any): Promise<void> {
-        return new Promise<void>(resolve => {
-            this.mockNamespace.wss.handleUpgrade(request, socket, head, (ws: WebSocket) => {
-                this.mockNamespace.wss.emit('connection', ws, request);
-                resolve();
-            });
-        });
-    }
-
     async start(): Promise<void> {
         return new Promise<void>(resolve => {
-            this.server.listen(this.port, this.host, 1024, () => { resolve(); });
+            this.server.listen(this.port, this.host, 1024, () => resolve());
         });
     }
 
@@ -86,7 +81,6 @@ class MockServer {
         this.mockNamespace.wss.clients.forEach((ws: WebSocket) => {
             ws.close();
         });
-
         this.server.close();
     }
 }
@@ -167,7 +161,7 @@ describe('WebSocketServer abstract class', () => {
 
         const message = 'a';
         mockServer.mockNamespace.broadcastMessage(message);
-        await sleep(1000);
+        await sleep(500);
         expect(mockClientA.messages[0]).toBe(message);
         expect(mockClientB.messages[0]).toBe(message);
         mockClientA.clean();
@@ -179,7 +173,7 @@ describe('WebSocketServer abstract class', () => {
         await mockClient.open();
 
         mockClient.send('a');
-        await sleep(1000);
+        await sleep(500);
         mockClient.clean();
     });
 });

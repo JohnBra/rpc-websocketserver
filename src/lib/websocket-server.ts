@@ -1,4 +1,4 @@
-import * as WebSocket from 'ws';
+import WebSocket from 'ws';
 import { MessageHandler, Method } from './interfaces';
 
 export abstract class WebSocketServer {
@@ -19,7 +19,7 @@ export abstract class WebSocketServer {
     }
 
     broadcastMessage(data: WebSocket.Data): void {
-        this.wss.clients.forEach((client) => this._sendMessage(client as WebSocket, data));
+        this.wss.clients.forEach((client: WebSocket) => this._sendMessage(client, data));
     }
 
     protected _sendMessage(ws: WebSocket, data: WebSocket.Data): void {
@@ -27,7 +27,7 @@ export abstract class WebSocketServer {
     }
 
     protected _onConnection(ws: WebSocket): void {
-        ws.on('message', async (message: string) => this._onMessage(ws, message));
+        ws.on('message', async (message: WebSocket.Data) => this._onMessage(ws, message));
     }
 
     protected async _onMessage(ws: WebSocket, message: WebSocket.Data): Promise<void> {
