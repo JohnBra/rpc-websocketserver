@@ -2,16 +2,6 @@ import {HandlerResult, Method} from '../../lib/interfaces';
 import SimpleMessageHandler from "../../lib/message-handlers/simple";
 import { NOOP } from "../../lib/constants";
 
-class MockNamespace {
-    getMockSumFunction(): Function {
-        return this.mockSum;
-    }
-
-    mockSum(a: string, b: number): string {
-        return a + b;
-    }
-}
-
 describe('SimpleMessageHandler class', () => {
     let registeredMethodA: Method;
     let registeredMethodB: Method;
