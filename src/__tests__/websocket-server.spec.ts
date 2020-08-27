@@ -161,7 +161,7 @@ describe('WebSocketServer abstract class', () => {
 
         const message = 'a';
         mockServer.mockNamespace.broadcastMessage(message);
-        await sleep(500);
+        await sleep(1000);
         expect(mockClientA.messages[0]).toBe(message);
         expect(mockClientB.messages[0]).toBe(message);
         mockClientA.clean();

@@ -24,7 +24,7 @@ class SimpleMessageHandler implements MessageHandler {
         let response;
         if (!error) {
             try {
-                response =  await func(...args);
+                response = await func(...args);
             } catch (err) {
                 console.log(err);
                 response = 'Internal server error';
@@ -32,7 +32,7 @@ class SimpleMessageHandler implements MessageHandler {
         } else {
             response = data;
         }
-        if (response) response = JSON.stringify(response);
+        if (response && typeof response !== 'string') response = JSON.stringify(response);
 
         return response;
     }
