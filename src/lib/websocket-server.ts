@@ -7,6 +7,11 @@ export abstract class WebSocketServer {
     protected readonly _namespaceMethods: Map<string, Method>;
     protected _messageHandler: MessageHandler;
 
+    /**
+     * @param messageHandler {MessageHandler} - MessageHandler instance
+     * @param options {WebSocket.ServerOptions} - ws server options
+     * @protected
+     */
     protected constructor(messageHandler: MessageHandler, options: WebSocket.ServerOptions) {
         this.wss = new WebSocket.Server(options);
         this.wss.addListener('connection', (ws: WebSocket) => this._onConnection(ws));

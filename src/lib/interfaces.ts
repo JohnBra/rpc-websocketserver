@@ -4,11 +4,13 @@ import * as WebSocket from 'ws';
  * A param has a string key and an any value.
  * If it is an expected param -> value is of type string
  */
-
 export type Params = Record<string, any>;
 
 export type MethodArgs = Array<any>;
 
+/**
+ *
+ */
 export type Request = {
     method: string;
     params?: Params | MethodArgs;
