@@ -16,8 +16,7 @@ class JSONRPC2MessageHandler implements MessageHandler {
         try {
             const request = validateAndParseMessage(message, ParseError);
             assertValidJSONRPC2Request(request, InvalidRequest);
-            // set request as res
-            res.data.requestId = request.id;
+            if (Object(request).hasOwnProperty('id')) res.data.requestId = request.id;
             const method = validateMethod(request.method, methods, InvalidMethod);
             res.func = method.func;
             res.args = validateParams(request?.params, method.params, InvalidParams);

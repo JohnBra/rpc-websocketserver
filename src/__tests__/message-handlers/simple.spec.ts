@@ -99,6 +99,8 @@ describe('SimpleMessageHandler class', () => {
     });
 
     it('process() should return "Internal server error" if executed function throws error', async () => {
+        const originalLog = console.log;
+        console.log = jest.fn();
         const mockHandlerResult: HandlerResult = {
             error: false,
             data: undefined,
@@ -109,6 +111,7 @@ describe('SimpleMessageHandler class', () => {
         const res = await messageHandler.process(mockHandlerResult);
 
         expect(res).toEqual('Internal server error');
+        console.log = originalLog;
     });
 
     it('process() should return data if handler result has error === true', async () => {
