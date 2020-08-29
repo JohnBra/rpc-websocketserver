@@ -36,5 +36,12 @@ export interface MessageHandler {
      * @returns {HandlerResult} - result of message validation
      */
     handle(message: WebSocket.Data, registeredMethods: Map<string, Method>): HandlerResult;
+
+    /**
+     * Should implement execution of method and return undefined or data to reply to client
+     *
+     * @param handlerResult {HandlerResult} - message handler result
+     * @returns {WebSocket.Data | undefined | Promise<WebSocket.Data | undefined>}
+     */
     process(handlerResult: HandlerResult): WebSocket.Data | undefined | Promise<WebSocket.Data | undefined>;
 }
