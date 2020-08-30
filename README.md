@@ -72,7 +72,7 @@ class NamespaceA extends WebSocketServer {
 ```
 
 ### Server
-Set up your ws server similar to the way you would in the [ws example](https://github.com/websockets/ws/blob/master/README.md#external-https-server) and add your own namespaces
+Set up your ws server similar to the way you would in the [ws example](https://github.com/websockets/ws/blob/master/README.md#multiple-servers-sharing-a-single-https-server) and add your own namespaces
 ```typescript
 import express from 'express';
 import http from 'http';
@@ -114,4 +114,4 @@ server.listen(10001, '0.0.0.0', 1024, () => {
 Feel free to give feedback through issues or open pull requests with improvements.
 
 ## License
-MIT
+[MIT](https://github.com/JohnBra/rpc-websocketserver/blob/master/LICENSE)
