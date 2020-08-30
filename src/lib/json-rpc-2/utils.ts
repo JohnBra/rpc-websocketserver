@@ -1,4 +1,4 @@
-import { ErrorObject, Id, Request, ResponseObject } from './interfaces';
+import { ErrorObject, ErrorDetails, Id, Request, ResponseObject } from './interfaces';
 import { assertValidRequest, ErrorType } from '../utils';
 
 const ERRORS = new Map([
@@ -10,12 +10,25 @@ const ERRORS = new Map([
     [-32700, 'Parse error'],
 ]);
 
-export function buildError(code: number, details?: string | object): ErrorObject {
+/**
+ * Builds and returns a JSON RPC 2 conform error object.
+ *
+ * @param code {number} - JSON RPC 2 error code
+ * @param details {ErrorDetails} - optional primitive or structured value with detailed error information
+ */
+export function buildError(code: number, details?: ErrorDetails): ErrorObject {
     const error: ErrorObject = { code, message: ERRORS.get(code) || 'Internal server error' };
     if (details) error.data = details;
     return error;
 }
 
+/**
+ * Builds and returns a JSON RPC 2 conform response object.
+ *
+ * @param error {boolean} - if true -> builds JSON RPC 2 error response, if false -> JSON RPC 2 result response
+ * @param id {Id} - JSON RPC 2 id
+ * @param data {any | ErrorObject} - should be rpc result if error is false, otherwise ErrorObject
+ */
 export function buildResponse(error: boolean, id: Id, data: any | ErrorObject): ResponseObject {
     if (error) return { jsonrpc: '2.0', error: data, id };
     return { jsonrpc: '2.0', result: data, id };
