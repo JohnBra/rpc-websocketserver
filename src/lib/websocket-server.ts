@@ -1,6 +1,23 @@
 import WebSocket from 'ws';
 import { MessageHandler, Method } from './interfaces';
 
+/**
+ * Abstract WebSocketServer class. Describes a namespace once inherited.
+ * Wraps the ws lib WebSocket.Server. Includes convenience methods to interact with clients.
+ *
+ * @abstract
+ * @example
+ *      class NamespaceA extends WebSocketServer {
+ *          constructor(messageHandler: MessageHandler, options: WebSocket.ServerOptions) {
+ *              super(messageHandler, options);
+ *          }
+ *
+ *          `@register()`
+ *          sum(@param('a') a: number, @param('b') b: number) {
+ *              return a + b;
+ *          }
+ *      }
+ */
 export abstract class WebSocketServer {
     public wss: WebSocket.Server;
     protected static methods: Set<Method> = new Set();
