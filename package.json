@@ -10,7 +10,6 @@
   },
   "license": "MIT",
   "dependencies": {
-    "express": "^4.17.1",
     "reflect-metadata": "^0.1.13",
     "ws": "^7.3.0"
   },
