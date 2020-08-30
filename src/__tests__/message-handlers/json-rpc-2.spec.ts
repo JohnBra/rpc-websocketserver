@@ -2,6 +2,10 @@ import JSONRPC2MessageHandler from '../../lib/message-handlers/json-rpc-2';
 import { HandlerResult, Method } from '../../lib/interfaces';
 import { NOOP } from "../../lib/constants";
 
+function assertString(val: any): asserts val is string {
+    if (typeof val !== 'string') throw Error('Value is not of type string');
+}
+
 describe('JSONRPC2MessageHandler class', () => {
     let registeredMethodA: Method;
     let registeredMethodB: Method;
@@ -105,6 +109,7 @@ describe('JSONRPC2MessageHandler class', () => {
         expect(res).toBeDefined();
         expect(typeof res === 'string').toBe(true);
 
+        assertString(res);
         const o = JSON.parse(res);
 
         expect(o.jsonrpc).toEqual('2.0');
@@ -143,6 +148,7 @@ describe('JSONRPC2MessageHandler class', () => {
         expect(res).toBeDefined();
         expect(typeof res === 'string').toBe(true);
 
+        assertString(res);
         const o = JSON.parse(res);
 
         expect(o.jsonrpc).toEqual('2.0');
@@ -164,7 +170,10 @@ describe('JSONRPC2MessageHandler class', () => {
 
         expect(res).toBeDefined();
         expect(typeof res === 'string').toBe(true);
+
+        assertString(res);
         const o = JSON.parse(res);
+
         expect(o.jsonrpc).toEqual('2.0');
         expect(o.id).toEqual(mockHandlerResult.data.requestId);
         expect(o.error).toBeDefined();
