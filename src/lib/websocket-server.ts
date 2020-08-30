@@ -81,7 +81,6 @@ export abstract class WebSocketServer {
      * @param ws {WebSocket} - websocket/client that sent the message
      * @param message {WebSocket.Data} - data received from the client
      * @protected
-     *
      * @returns {Promise<void>}
      */
     protected async _onMessage(ws: WebSocket, message: WebSocket.Data): Promise<void> {

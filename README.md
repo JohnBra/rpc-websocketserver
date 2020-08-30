@@ -47,9 +47,9 @@ Add experimental decorators and emit metadata to your `tsconfig.json`
 * [Swagger](https://swagger.io/) like documentation generation with [OpenRPC](https://open-rpc.org/) as model -> still conceptualizing
 * Protected methods (require authentication before calling rpc)
 
-## Usage examples
+## Usage example
 
-### Create a namespace for your rpc
+### Create a namespaces for your rpc
 ```typescript
 import { WebSocketServer, register, param } from 'rpc-websocketserver';
 
@@ -69,6 +69,23 @@ class NamespaceA extends WebSocketServer {
        return a + b;
     }
 }
+
+// inherit from WebSocketServer
+class NamespaceB extends WebSocketServer {
+    constructor(messageHandler: MessageHandler, options: WebSocket.ServerOptions) {
+       super(messageHandler, options);
+    }
+    
+    @register()     // use the '@register' decorator to add function to the registered namespace methods
+    substract(@param('a') a: number, @param('b') b: number) { // use the '@param' decorator to expose parameters
+       return a - b;
+    }
+
+    @register('foo')     // optional: register a function with a specific name instead of the function name
+    bar(@param('a') a: number, @param('b') b: number) { // use the '@param' decorator to expose parameters
+       return a - b;
+    }
+}
 ```
 
 ### Server
@@ -78,8 +95,8 @@ import express from 'express';
 import http from 'http';
 import url from 'url';
 
-import JSONRPC2MessageHandler from 'rpc-websocketserver/message-handlers/json-rpc-2';
-import SimpleMessageHandler from 'rpc-websocketserver/message-handlers/simple';
+import { JSONRPC2MessageHandler } from 'rpc-websocketserver';
+import { SimpleMessageHandler } from 'rpc-websocketserver';
 
 const app = express();
 const server = http.createServer(app);
@@ -109,6 +126,8 @@ server.listen(10001, '0.0.0.0', 1024, () => {
     console.log(`Listening for connections on 10001...`);
 });
 ```
+
+That's it!
 
 ## Contributing
 Feel free to give feedback through issues or open pull requests with improvements.
