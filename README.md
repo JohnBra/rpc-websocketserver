@@ -44,7 +44,7 @@ Add experimental decorators and emit metadata to your `tsconfig.json`
 * Parameter typechecking of rpc methods
 
 ### Possible features to be added in the future:
-* [Swagger](https://swagger.io/) like documentation generation with [OpenRPC](https://open-rpc.org/) as model -> still conceptualizing
+* [Swagger](https://swagger.io/) like documentation generation with [OpenRPC](https://open-rpc.org/) as model
 * Protected methods (require authentication before calling rpc)
 
 ## Usage example
