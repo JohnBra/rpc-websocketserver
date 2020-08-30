@@ -34,6 +34,12 @@ export function buildResponse(error: boolean, id: Id, data: any | ErrorObject): 
     return { jsonrpc: '2.0', result: data, id };
 }
 
+/**
+ * Assertion to ensure value is a JSON RPC 2 conform request
+ *
+ * @param val {*} - value to be asserted on
+ * @param Err {ErrorType} - Error to be thrown if assertion fails
+ */
 export function assertValidJSONRPC2Request(val: any, Err: ErrorType<Error>): asserts val is Request {
     if (val?.jsonrpc !== '2.0')
         throw new Err(`Value of 'jsonrpc' must be exactly '2.0' and of type 'string'`);

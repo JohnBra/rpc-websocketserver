@@ -1,9 +1,22 @@
-import * as WebSocket from 'ws';
+import WebSocket from 'ws';
 import { HandlerResult, MessageHandler, Method } from '../interfaces';
 import { assertValidRequest, validateAndParseMessage, validateMethod, validateParams } from '../utils';
 import { NOOP } from '../constants';
 
+/**
+ * Minimalist message handler
+ *
+ * @implements {MessageHandler}
+ */
 class SimpleMessageHandler implements MessageHandler {
+
+    /**
+     * Handles an incoming message
+     *
+     * @param message {string | Buffer} - message to be parsed, validated and evaluated
+     * @param registeredMethods {Map<string, Method>} - registered namespace methods
+     * @returns {HandlerResult} - result object to be processed
+     */
     handle(message: string | Buffer, registeredMethods: Map<string, Method>): HandlerResult {
         const handlerResult: HandlerResult = { error: true, data: undefined, func: NOOP, args: [] };
         try {
@@ -19,7 +32,13 @@ class SimpleMessageHandler implements MessageHandler {
         return handlerResult;
     }
 
-    async process(handlerResult: HandlerResult): Promise<WebSocket.Data> {
+    /**
+     * Function to process handler result. Should call rpc and return data to be sent to clients
+     *
+     * @param handlerResult {HandlerResult} - handler result from same message handler
+     * @returns {Promise<WebSocket.Data | undefined>}
+     */
+    async process(handlerResult: HandlerResult): Promise<WebSocket.Data | undefined> {
         const { error, data, func, args } = handlerResult;
         let response;
         if (!error) {

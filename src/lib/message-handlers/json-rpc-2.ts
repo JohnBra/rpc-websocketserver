@@ -1,11 +1,24 @@
+import WebSocket from 'ws';
 import { NOOP } from '../constants';
 import { Method, MessageHandler, HandlerResult } from '../interfaces';
 import { validateAndParseMessage, validateMethod, validateParams } from '../utils';
 import { assertValidJSONRPC2Request, buildResponse } from '../json-rpc-2/utils';
 import { InternalError, InvalidMethod, InvalidParams, InvalidRequest, ParseError } from '../json-rpc-2/errors';
 
+/**
+ * JSON RPC 2 conform message handler
+ *
+ * @implements {MessageHandler}
+ */
 class JSONRPC2MessageHandler implements MessageHandler {
-    handle(message: string | Buffer, methods: Map<string, Method>): HandlerResult {
+    /**
+     * Handles an incoming message conforming to the JSON RPC 2 protocol
+     *
+     * @param message {string | Buffer} - message to be parsed, validated and evaluated
+     * @param registeredMethods {Map<string, Method>} - registered namespace methods
+     * @returns {HandlerResult} - result object to be processed
+     */
+    handle(message: string | Buffer, registeredMethods: Map<string, Method>): HandlerResult {
         const res: HandlerResult = {
             error: true,
             data: {},
@@ -17,7 +30,7 @@ class JSONRPC2MessageHandler implements MessageHandler {
             const request = validateAndParseMessage(message, ParseError);
             assertValidJSONRPC2Request(request, InvalidRequest);
             if (Object(request).hasOwnProperty('id')) res.data.requestId = request.id;
-            const method = validateMethod(request.method, methods, InvalidMethod);
+            const method = validateMethod(request.method, registeredMethods, InvalidMethod);
             res.func = method.func;
             res.args = validateParams(request?.params, method.params, InvalidParams);
             res.error = false;
@@ -28,7 +41,13 @@ class JSONRPC2MessageHandler implements MessageHandler {
         return res;
     }
 
-    async process(handlerResult: HandlerResult): Promise<any> {
+    /**
+     * Function to process handler result. Should call rpc and return a JSON RPC 2 conform response
+     *
+     * @param handlerResult {HandlerResult} - handler result from same message handler
+     * @returns {Promise<WebSocket.Data | undefined>}
+     */
+    async process(handlerResult: HandlerResult): Promise<WebSocket.Data | undefined> {
         const { error, data, func, args } = handlerResult;
         const isNotification = !data.hasOwnProperty('requestId');
         const requestId = handlerResult.data.requestId ?? null;
