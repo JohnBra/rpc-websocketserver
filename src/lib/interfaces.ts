@@ -6,24 +6,46 @@ import WebSocket from 'ws';
  */
 export type Params = Record<string, any>;
 
+/**
+ * RPC method args
+ */
 export type MethodArgs = Array<any>;
 
+/**
+ * Expected request from clients
+ */
 export type Request = {
+    /** Method (RPC) to be called */
     method: string;
+    /** Optional params object or array */
     params?: Params | MethodArgs;
 };
 
+/**
+ * Method type
+ */
 export type Method = {
+    /** Namespace the method is registered in */
     namespace: string;
+    /** Method name (identifier) */
     name: string;
+    /** Registered params for method */
     params: Params;
+    /** Reference to function */
     func: Function;
 };
 
+/**
+ * Describes a message handler result
+ */
 export type HandlerResult = {
+    /** Should be true when message has error, false otherwise */
     error: boolean;
+    /** Convenience property to hold any kind of data */
     data: any;
+    /** RPC to be called */
     func: Function;
+    /** Args to be passed to function */
     args: MethodArgs;
 };
 
