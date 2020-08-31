@@ -8,13 +8,13 @@ Wraps the popular [ws](https://github.com/websockets/ws) lib.
 ## Table of contents
 
 ## Installing
-With yarn
+With yarn (incl. peer dependencies)
 ```bash
-yarn add rpc-websocketserver
+yarn add rpc-websocketserver ws
 ```
-With npm
+With npm (incl. peer dependencies)
 ```
-npm install rpc-websocketserver
+npm install rpc-websocketserver ws
 ```
 Add experimental decorators and emit metadata to your `tsconfig.json`
 ```json
