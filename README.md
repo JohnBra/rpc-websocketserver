@@ -1,4 +1,8 @@
 # rpc-websocketserver - A Node.js library
+[![Version npm](https://img.shields.io/npm/v/rpc-websocketserver.svg?logo=npm)](https://www.npmjs.com/package/rpc-websocketserver)
+![build](https://github.com/JohnBra/rpc-websocketserver/workflows/build/badge.svg)
+[![Coverage Status](https://coveralls.io/repos/github/JohnBra/rpc-websocketserver/badge.svg?branch=master)](https://coveralls.io/github/JohnBra/rpc-websocketserver?branch=master)
+
 A simple and extensively documented typescript focused lib, to implement/prototype rpc websocket server applications with convenient decorators.
 
 Wraps the popular [ws](https://github.com/websockets/ws) lib.
