@@ -6,6 +6,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 ## Added
+- npm package description
+- npm package tags
 
 ## Changed
 - changed ws from dependency to peer dependency (incl. doc)
