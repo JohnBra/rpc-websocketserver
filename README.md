@@ -3,9 +3,20 @@ A simple and extensively documented typescript focused lib, to implement/prototy
 
 Wraps the popular [ws](https://github.com/websockets/ws) lib.
 
-**Note**: This is a backend focused library and does therefore not work in the browser.
+**Note**: This is a backend focused library and therefore does not work in the browser.
 
 ## Table of contents
+- [Installing](#installing)
+- [Features, limitations and possible features to be added](#features-limitations-and-possible-features-to-be-added)
+    - [Features](#this-lib-offers-the-following-out-of-the-box)
+    - [Limitations](#this-lib-does-not-offer-the-following)
+    - [Possible features](#possible-features-to-be-added-in-the-future)
+- [Usage examples](#usage-examples)
+    - [Create namespaces for your rpc](#create-namespaces-for-your-rpc)
+    - [Server](#server)
+- [Changelog](#changelog)
+- [Contributing](#contributing)
+- [License](#license)
 
 ## Installing
 With yarn (incl. peer dependencies)
@@ -28,26 +39,26 @@ Add experimental decorators and emit metadata to your `tsconfig.json`
   ...
 }
 ```
-## Perks, limitations and future prospects
+## Features, limitations and possible features to be added
 ### This lib offers the following out of the box:
 * Extensive documentation for ease of development
-* RPC namespace creation
-* [JSON RPC 2](https://www.jsonrpc.org/specification) conform message handler
-* Simple message handler
-* Easily readable and maintainable registration of namespace methods with decorators
-* Convenience method to broadcast messages to clients
-* Defined interfaces to implement your own custom message handlers
 * Retains all functionality of the [ws](https://github.com/websockets/ws) lib
+* RPC namespace creation
+* [JSON RPC 2](https://www.jsonrpc.org/specification) conform message handler (incl. errors, responses and the like)
+* Simple message handler (super simplistic message handler)
+* Easily readable and maintainable registration of namespace methods with decorators
+* Convenience methods to interact with clients (e.g. broadcast messages to all clients). *You are also able to reimplement all ws listeners and convenience methods if you wish*
+* Defined interfaces to implement your own custom message handlers
 
 ### This lib does **NOT** offer the following:
 * Batch request handling
-* Parameter typechecking of rpc methods
+* Runtime parameter typechecking on remote procedure call
 
 ### Possible features to be added in the future:
 * [Swagger](https://swagger.io/) like documentation generation with [OpenRPC](https://open-rpc.org/) as model
 * Protected methods (require authentication before calling rpc)
 
-## Usage example
+## Usage examples
 
 ### Create namespaces for your rpc
 ```typescript
@@ -89,7 +100,7 @@ class NamespaceB extends WebSocketServer {
 ```
 
 ### Server
-Set up your ws server similar to the way you would in the [ws example](https://github.com/websockets/ws/blob/master/README.md#multiple-servers-sharing-a-single-https-server) and add your own namespaces
+Set up your ws server similar like you would in the [ws example](https://github.com/websockets/ws/blob/master/README.md#multiple-servers-sharing-a-single-https-server) and add your own namespaces
 ```typescript
 import express from 'express';
 import http from 'http';
@@ -103,6 +114,7 @@ const server = http.createServer(app);
 
 // pass message handler instances and WebSocket.ServerOptions to the respective namespaces
 const namespaceA = new RPCNamespaceA(new SimpleMessageHandler(), { noServer: true });
+// use different message handlers for different namespaces
 const namespaceB = new RPCNamespaceB(new JSONRPC2MessageHandler(), { noServer: true });
 
 
@@ -128,6 +140,9 @@ server.listen(10001, '0.0.0.0', 1024, () => {
 ```
 
 That's it!
+
+## Changelog
+[Changelog](https://github.com/JohnBra/rpc-websocketserver/blob/master/CHANGELOG.md)
 
 ## Contributing
 Feel free to give feedback through issues or open pull requests with improvements.
