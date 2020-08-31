@@ -4,6 +4,7 @@
 .prettierrc.js
 /coverage
 tsconfig.json
+yarn-error.log
 yarn.lock
 jest.config.js
 src
