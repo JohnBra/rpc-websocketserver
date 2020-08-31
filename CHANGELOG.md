@@ -13,10 +13,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - changed ws from dependency to peer dependency (incl. doc)
 
 ## [1.0.1] - 2020-08-30
-## Added
+### Added
 - npmignore file
 
-## Removed
+### Removed
 - unnecessary files from dist
 
 ## [1.0.0] - 2020-08-30
