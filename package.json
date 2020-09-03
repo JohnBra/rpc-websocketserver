@@ -16,7 +16,7 @@
     "WebSockets",
     "real-time"
   ],
-  "main": "index.js",
+  "main": "dist/index.js",
   "scripts": {
     "lint": "eslint --ext .ts --quiet --fix ./",
     "clean": "rm -rf dist && mkdir dist",
