@@ -1,6 +1,6 @@
-import {HandlerResult, Method} from '../../lib/interfaces';
-import SimpleMessageHandler from "../../lib/message-handlers/simple";
-import { NOOP } from "../../lib/constants";
+import { HandlerResult, Method } from '../..';
+import SimpleMessageHandler from '../../lib/message-handlers/simple';
+import { NOOP } from '../../lib/constants';
 
 describe('SimpleMessageHandler class', () => {
     let registeredMethodA: Method;
@@ -78,7 +78,7 @@ describe('SimpleMessageHandler class', () => {
             args: [arg0, arg1]
         };
         const messageHandler = new SimpleMessageHandler();
-        const res = await messageHandler.process(mockHandlerResult);
+        const res = await messageHandler.process({}, mockHandlerResult);
 
         expect(res).toBeDefined();
         expect(res).toEqual(expectedResult);
@@ -93,7 +93,7 @@ describe('SimpleMessageHandler class', () => {
             args: ['abc', 1]
         };
         const messageHandler = new SimpleMessageHandler();
-        const res = await messageHandler.process(mockHandlerResult);
+        const res = await messageHandler.process({}, mockHandlerResult);
 
         expect(res).toBeUndefined();
     });
@@ -108,7 +108,7 @@ describe('SimpleMessageHandler class', () => {
             args: []
         };
         const messageHandler = new SimpleMessageHandler();
-        const res = await messageHandler.process(mockHandlerResult);
+        const res = await messageHandler.process({}, mockHandlerResult);
 
         expect(res).toEqual('Internal server error');
         console.log = originalLog;
@@ -122,7 +122,7 @@ describe('SimpleMessageHandler class', () => {
             args: []
         };
         const messageHandler = new SimpleMessageHandler();
-        const res = await messageHandler.process(mockHandlerResult);
+        const res = await messageHandler.process({}, mockHandlerResult);
 
         expect(res).toEqual(mockHandlerResult.data);
     });

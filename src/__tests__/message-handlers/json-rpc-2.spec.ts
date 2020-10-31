@@ -1,6 +1,6 @@
 import JSONRPC2MessageHandler from '../../lib/message-handlers/json-rpc-2';
-import { HandlerResult, Method } from '../../lib/interfaces';
-import { NOOP } from "../../lib/constants";
+import { HandlerResult, Method } from '../..';
+import { NOOP } from '../../lib/constants';
 
 function assertString(val: any): asserts val is string {
     if (typeof val !== 'string') throw Error('Value is not of type string');
@@ -104,7 +104,7 @@ describe('JSONRPC2MessageHandler class', () => {
             args: [0, 1]
         };
         const messageHandler = new JSONRPC2MessageHandler();
-        const res = await messageHandler.process(mockHandlerResult);
+        const res = await messageHandler.process({}, mockHandlerResult);
 
         expect(res).toBeDefined();
         expect(typeof res === 'string').toBe(true);
@@ -126,7 +126,7 @@ describe('JSONRPC2MessageHandler class', () => {
             args: [0, 1]
         };
         const messageHandler = new JSONRPC2MessageHandler();
-        const res = await messageHandler.process(mockHandlerResult);
+        const res = await messageHandler.process({}, mockHandlerResult);
 
         expect(res).toBeUndefined();
     });
@@ -143,7 +143,7 @@ describe('JSONRPC2MessageHandler class', () => {
             args: [0, 1]
         };
         const messageHandler = new JSONRPC2MessageHandler();
-        const res = await messageHandler.process(mockHandlerResult);
+        const res = await messageHandler.process({}, mockHandlerResult);
 
         expect(res).toBeDefined();
         expect(typeof res === 'string').toBe(true);
@@ -166,7 +166,7 @@ describe('JSONRPC2MessageHandler class', () => {
             args: [0, 1]
         };
         const messageHandler = new JSONRPC2MessageHandler();
-        const res = await messageHandler.process(mockHandlerResult);
+        const res = await messageHandler.process({}, mockHandlerResult);
 
         expect(res).toBeDefined();
         expect(typeof res === 'string').toBe(true);
