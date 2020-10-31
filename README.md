@@ -18,8 +18,8 @@ Wraps the popular [ws](https://github.com/websockets/ws) lib.
 - [Usage examples](#usage-examples)
     - [Create namespaces for your rpc](#create-namespaces-for-your-rpc)
     - [Server](#server)
-    - [Sending messages to the server](#sending-messages-to-the-server)
-    - [Reimplementing provided WebSocketServer functionality](#reimplementing-provided-websocketserver-functionality)
+    - [SimpleMessageHandler](#simplemessagehandler)
+    - [Overriding provided WebSocketServer functionality](#overriding-provided-websocketserver-functionality)
 - [Changelog](#changelog)
 - [Contributing](#contributing)
 - [License](#license)
@@ -53,7 +53,7 @@ Add experimental decorators and emit metadata to your `tsconfig.json`
 - [JSON RPC 2](https://www.jsonrpc.org/specification) conform message handler (incl. errors, responses and the like)
 - Simple message handler (super simplistic message handler)
 - Easily readable and maintainable registration of namespace methods with decorators
-- Convenience methods to interact with clients (e.g. broadcast messages to all clients). *You are also able to reimplement all ws listeners and convenience methods if you wish*
+- Convenience methods to interact with clients (e.g. broadcast messages to all clients). *You are also able to override all ws listeners and convenience methods if you wish*
 - Defined interfaces to implement your own custom message handlers
 
 ### This lib does **NOT** offer the following:
@@ -147,7 +147,7 @@ server.listen(10001, '0.0.0.0', 1024, () => {
 
 That's it for the server!
 
-### Sending messages to the server
+### SimpleMessageHandler
 Once you have started the server, you can start firing away messages to the implemented endpoints. Provided the example code above, we have two endpoints:
 - ws://localhost:10001/a (SimpleMessageHandler)
 - ws://localhost:10001/b (JSONRPC2MessageHandler)
@@ -157,6 +157,7 @@ Once you have connected to the endpoint with the **SimpleMessageHandler** you ha
 - After reading the string or Buffer, the RPC must be an object
 - The object must have the "method" field with a value of type string
 - The object can have the "params" key. It may also be omitted.
+- If provided, the "params" field must either be of type object (named parameters), or of type array (positional parameters)
 
 Valid remote procedure calls for the SimpleMessageHandler
 
@@ -181,7 +182,7 @@ Omitted parameters:
 }
 ```
 
-### Reimplementing provided WebSocketServer functionality
+### Overriding provided WebSocketServer functionality
 Currently, the [WebSocketServer](https://github.com/JohnBra/rpc-websocketserver/blob/master/src/lib/websocket-server.ts#L21) offers the following functionality out of the box:
 - **Public** function to **retrieve all registered methods** for the specific namespace
 - **Public** function to **broadcast a message** to all clients of this namespace
@@ -189,7 +190,7 @@ Currently, the [WebSocketServer](https://github.com/JohnBra/rpc-websocketserver/
 - **Protected** function to **set ws listeners** once a connection was established
 - **Protected** function to **handle received messages**
 
-All protected functions can be reimplemented for your specific namespaces. You are encouraged to reimplement the 'onConnection' handler with handlers for the possible [ws events](https://github.com/websockets/ws/blob/master/doc/ws.md#event-close-1) (e. g. error) like so:
+All protected functions can be overridden for your specific namespaces. You are encouraged to override the 'onConnection' handler with handlers for the possible [ws events](https://github.com/websockets/ws/blob/master/doc/ws.md#event-close-1) (e. g. error) like so:
 ```typescript
 import { WebSocketServer, register, param } from 'rpc-websocketserver';
 
@@ -204,7 +205,7 @@ class NamespaceA extends WebSocketServer {
        return a + b;
     }
 
-    // reimplementation of the onConnection handler to add more event listeners once a connection is established
+    // overriding the onConnection handler to add more event listeners once a connection is established
     protected _onConnection(ws: WebSocket): void {
         super._onConnection(ws);
         ws.addListener('error', (err: Error) => console.log(err));
