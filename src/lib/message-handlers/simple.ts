@@ -6,7 +6,29 @@ import { NOOP } from '../constants';
 /**
  * Minimalist message handler
  *
+ * - Incoming messages must be of type string or Buffer
+ * - After reading the string or Buffer, the RPC must be an object
+ * - The object must have the "method" key
+ * - The value of the "method" field must be of type string
+ * - The object can have the "params" key (it can also be omitted)
+ * <br/>
+ *
  * @implements {MessageHandler}
+ *
+ * @example Valid message with positional parameters
+ *      {
+ *          "method": "sum",
+ *          "params": [1, 2]
+ *      }
+ * @example Valid message with named parameters
+ *      {
+ *          "method": "sum",
+ *          "params": { "b": 1, "a": 2 }
+ *      }
+ * @example Valid message with named parameters omitted
+ *      {
+ *          "method": "sum"
+ *      }
  */
 class SimpleMessageHandler implements MessageHandler {
     /**
