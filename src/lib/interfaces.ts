@@ -49,6 +49,10 @@ export type HandlerResult = {
     args: MethodArgs;
 };
 
+/**
+ * Describes a message handler including functions to handle incoming requests as well as
+ * processing of the handled result
+ */
 export interface MessageHandler {
     /**
      * Should implement message parsing, request validation, method validation and param validation
@@ -62,8 +66,12 @@ export interface MessageHandler {
     /**
      * Should implement execution of method and return undefined or data to reply to client
      *
+     * @param context {any} - context of the calling class to properly handle 'this' in the function call
      * @param handlerResult {HandlerResult} - message handler result
      * @returns {WebSocket.Data | undefined | Promise<WebSocket.Data | undefined>}
      */
-    process(handlerResult: HandlerResult): WebSocket.Data | undefined | Promise<WebSocket.Data | undefined>;
+    process(
+        context: any,
+        handlerResult: HandlerResult,
+    ): WebSocket.Data | undefined | Promise<WebSocket.Data | undefined>;
 }

@@ -4,6 +4,10 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.0.0] - Unreleased
+### Changed
+- BREAKING: MessageHandler process interface to take calling context as first parameter, to handle 'this' in function call properly. This will break custom message handler implementations.
+
 ## [1.0.3] - 2020-09-03
 ### Changed
 - fixed main file path in package json

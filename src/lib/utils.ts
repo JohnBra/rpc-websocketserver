@@ -14,8 +14,7 @@ export interface ErrorType<T extends Error> extends Function {
  * @param Err {ErrorType} - Error to be thrown if assertion fails
  */
 export function assertStringOrBuffer(val: any, Err: ErrorType<Error>): asserts val is string | Buffer {
-    if (!Buffer.isBuffer(val) && typeof val !== 'string')
-        throw new Err(`Message must be of type 'string' or 'Buffer'`);
+    if (!Buffer.isBuffer(val) && typeof val !== 'string') throw new Err(`Message must be of type 'string' or 'Buffer'`);
 }
 
 /**

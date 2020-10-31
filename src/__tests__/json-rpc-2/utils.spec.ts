@@ -1,5 +1,4 @@
 import { assertValidJSONRPC2Request, buildError, buildResponse } from '../../lib/json-rpc-2/utils';
-import { ResponseObject } from '../../lib/json-rpc-2/interfaces';
 
 describe('assertValidJSONRPC2Request', () => {
     const validRequestA = { jsonrpc: '2.0', method: 'foo', params: [], id: 1 };
