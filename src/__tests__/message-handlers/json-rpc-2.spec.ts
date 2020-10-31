@@ -1,5 +1,5 @@
 import JSONRPC2MessageHandler from '../../lib/message-handlers/json-rpc-2';
-import { HandlerResult, Method } from '../..';
+import { HandlerResult, Method } from '../../lib/interfaces';
 import { NOOP } from '../../lib/constants';
 
 function assertString(val: any): asserts val is string {

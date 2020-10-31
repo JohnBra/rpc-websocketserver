@@ -1,4 +1,4 @@
-import { HandlerResult, Method } from '../..';
+import { HandlerResult, Method } from '../../lib/interfaces';
 import SimpleMessageHandler from '../../lib/message-handlers/simple';
 import { NOOP } from '../../lib/constants';
 

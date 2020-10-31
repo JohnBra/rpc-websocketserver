@@ -7,7 +7,6 @@ import { register } from '../lib/decorators';
 import express from 'express';
 import http from 'http';
 import url from 'url';
-import mock = jest.mock;
 
 async function sleep(ms: number): Promise<void> {
     return new Promise<void>(resolve => {

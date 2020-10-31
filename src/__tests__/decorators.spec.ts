@@ -1,7 +1,7 @@
 import 'reflect-metadata';
 import { PARAM_NAMES_KEY, param, register } from '../lib/decorators';
 import { WebSocketServer } from '../lib/websocket-server';
-import {MessageHandler, Method} from '../lib/interfaces';
+import { MessageHandler } from '../lib/interfaces';
 
 
 class MockNamespace extends WebSocketServer {

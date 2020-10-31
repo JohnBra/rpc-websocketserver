@@ -9,7 +9,6 @@ import { NOOP } from '../constants';
  * @implements {MessageHandler}
  */
 class SimpleMessageHandler implements MessageHandler {
-
     /**
      * Handles an incoming message
      *
