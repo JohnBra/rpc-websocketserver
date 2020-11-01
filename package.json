@@ -2,6 +2,9 @@
   "name": "rpc-websocketserver",
   "version": "2.0.0",
   "description": "Simple rpc websocket server, wrapping the very popular 'ws' library. Register your RPCs with convenient decorators.",
+  "homepage": "https://github.com/JohnBra/rpc-websocketserver",
+  "bugs": "https://github.com/JohnBra/rpc-websocketserver/issues",
+  "repository": "JohnBra/rpc-websocketserver",
   "keywords": [
     "RPC",
     "json-rpc2",
