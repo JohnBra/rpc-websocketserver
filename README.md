@@ -68,7 +68,8 @@ Add experimental decorators and emit metadata to your `tsconfig.json`
 
 ### Create namespaces for your rpc
 ```typescript
-import { WebSocketServer, register, param } from 'rpc-websocketserver';
+import WebSocket from 'ws';
+import { MessageHandler, WebSocketServer, register, param } from 'rpc-websocketserver';
 
 // inherit from WebSocketServer
 class NamespaceA extends WebSocketServer {
