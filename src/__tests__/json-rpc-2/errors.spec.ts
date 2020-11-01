@@ -6,7 +6,6 @@ import {
     JSONRPC2Error,
     ParseError
 } from '../../lib/json-rpc-2/errors';
-import exp = require("constants");
 
 describe('JSONRPC2Error base class', () => {
     it('should not throw error on constructor call', () => {

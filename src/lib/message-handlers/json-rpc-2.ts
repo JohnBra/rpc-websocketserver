@@ -44,10 +44,11 @@ class JSONRPC2MessageHandler implements MessageHandler {
     /**
      * Function to process handler result. Should call rpc and return a JSON RPC 2 conform response
      *
+     * @param context {any} - context of the calling class to properly handle 'this' in the function call
      * @param handlerResult {HandlerResult} - handler result from same message handler
      * @returns {Promise<WebSocket.Data | undefined>}
      */
-    async process(handlerResult: HandlerResult): Promise<WebSocket.Data | undefined> {
+    async process(context: any, handlerResult: HandlerResult): Promise<WebSocket.Data | undefined> {
         const { error, data, func, args } = handlerResult;
         const isNotification = !data.hasOwnProperty('requestId');
         const requestId = handlerResult.data.requestId ?? null;
@@ -55,7 +56,7 @@ class JSONRPC2MessageHandler implements MessageHandler {
         let jsonRpc2Response;
         if (!error) {
             try {
-                const executionResult = await func(...args);
+                const executionResult = await func.call(context, ...args);
                 // only build response if request wasn't a notification
                 if (!isNotification) jsonRpc2Response = buildResponse(false, requestId, executionResult);
             } catch (err) {
