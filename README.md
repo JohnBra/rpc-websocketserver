@@ -119,9 +119,9 @@ const app = express();
 const server = http.createServer(app);
 
 // pass message handler instances and WebSocket.ServerOptions to the respective namespaces
-const namespaceA = new RPCNamespaceA(new SimpleMessageHandler(), { noServer: true });
+const namespaceA = new NamespaceA(new SimpleMessageHandler(), { noServer: true });
 // use different message handlers for different namespaces
-const namespaceB = new RPCNamespaceB(new JSONRPC2MessageHandler(), { noServer: true });
+const namespaceB = new NamespaceB(new JSONRPC2MessageHandler(), { noServer: true });
 
 
 server.on('upgrade', function upgrade(request, socket, head) {
@@ -192,7 +192,8 @@ Currently, the [WebSocketServer](https://github.com/JohnBra/rpc-websocketserver/
 
 All protected functions can be overridden for your specific namespaces. You are encouraged to override the 'onConnection' handler with handlers for the possible [ws events](https://github.com/websockets/ws/blob/master/doc/ws.md#event-close-1) (e. g. error) like so:
 ```typescript
-import { WebSocketServer, register, param } from 'rpc-websocketserver';
+import WebSocket from 'ws';
+import { MessageHandler, WebSocketServer, register, param } from 'rpc-websocketserver';
 
 // inherit from WebSocketServer
 class NamespaceA extends WebSocketServer {
